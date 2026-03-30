@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KC Digital Navigator - ISP Lookup Tool</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      color: #e8e8e8;
+      padding: 20px;
+    }
+    .container { max-width: 700px; margin: 0 auto; }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .logo {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, #00d4aa 0%, #00a884 100%);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
+    .header h1 { font-size: 20px; font-weight: 600; }
+    .header p { font-size: 12px; color: #8892a0; }
+    .card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .card h2 { font-size: 17px; font-weight: 600; margin-bottom: 20px; }
+    .card h3 { font-size: 15px; font-weight: 600; margin-bottom: 16px; }
+    label.field-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: #8892a0;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    input[type="text"], select {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 15px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    select { cursor: pointer; }
+    input:focus, select:focus { outline: none; border-color: #00d4aa; }
+    .row-2 {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 12px;
+    }
+    .row-3 {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1.2fr;
+      gap: 12px;
+    }
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.05);
+      font-size: 14px;
+    }
+    .checkbox-item:hover { background: rgba(0, 0, 0, 0.3); }
+    .checkbox-item.selected {
+      background: rgba(0, 212, 170, 0.15);
+      border-color: rgba(0, 212, 170, 0.4);
+    }
+    .checkbox-item input { width: 18px; height: 18px; cursor: pointer; }
+    .prog-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    button {
+      padding: 14px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    button:hover { opacity: 0.9; }
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary {
+      background: linear-gradient(135deg, #00d4aa 0%, #00a884 100%);
+      color: #0a0a0a;
+      width: 100%;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    .btn-row { display: flex; gap: 12px; }
+    .btn-row button:first-child { flex: 1; }
+    .btn-row button:last-child { flex: 2; }
+    .btn-fcc {
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+      color: #fff;
+    }
+    .speed-rec {
+      background: rgba(0, 212, 170, 0.1);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    .speed-rec strong { color: #00d4aa; }
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .results-header h2 { margin: 0; }
+    .copy-buttons { display: flex; gap: 8px; }
+    .btn-copy {
+      padding: 10px 16px;
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+    .btn-copy.copied { background: #00d4aa; color: #0a0a0a; }
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffc107;
+      margin: 0 0 12px 0;
+    }
+    .section-title.gray { color: #8892a0; margin-top: 20px; }
+    .low-income-card {
+      background: rgba(255, 193, 7, 0.1);
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 10px;
+    }
+    .low-income-card .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .low-income-card h4 { font-size: 15px; margin: 0 0 4px 0; }
+    .low-income-card .phone { font-size: 12px; color: #a8b2bc; }
+    .low-income-card .price { font-size: 20px; font-weight: 700; color: #00d4aa; }
+    .low-income-card .speed { font-size: 12px; color: #8892a0; }
+    .low-income-card .elig { font-size: 12px; color: #a8b2bc; margin-top: 10px; }
+    .isp-card {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .isp-card h4 { font-size: 14px; margin: 0 0 4px 0; }
+    .isp-card .meta { font-size: 11px; color: #8892a0; }
+    .isp-card .badge {
+      background: rgba(0, 212, 170, 0.15);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      color: #00d4aa;
+    }
+    .resources {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .resources h4 { font-size: 13px; color: #8892a0; margin-bottom: 12px; }
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .resource-card {
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .resource-card .name { font-size: 13px; font-weight: 600; }
+    .resource-card .desc { font-size: 12px; color: #00d4aa; }
+    .resource-card .url { font-size: 10px; color: #8892a0; }
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #6b7280;
+      padding: 16px;
+    }
+    .hidden { display: none !important; }
+    .address-display {
+      background: rgba(0, 212, 170, 0.08);
+      border: 1px solid rgba(0, 212, 170, 0.2);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    .address-display strong { color: #00d4aa; }
+    .county-badge {
+      display: inline-block;
+      background: rgba(52, 152, 219, 0.2);
+      border: 1px solid rgba(52, 152, 219, 0.4);
+      color: #3498db;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+    .warning-box {
+      background: rgba(241, 196, 15, 0.15);
+      border: 1px solid rgba(241, 196, 15, 0.4);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 16px;
+      color: #f1c40f;
+      font-size: 13px;
+    }
+    @media (max-width: 600px) {
+      .checkbox-grid { grid-template-columns: 1fr; }
+      .resources-grid { grid-template-columns: 1fr; }
+      .btn-row { flex-direction: column; }
+      .btn-row button { flex: none !important; }
+      .row-2, .row-3 { grid-template-columns: 1fr; }
+      .results-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .copy-buttons { width: 100%; }
+      .copy-buttons .btn-copy { flex: 1; padding: 10px 12px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">📡</div>
+      <div>
+        <h1>KC Digital Navigator ISP Tool</h1>
+        <p>FCC Data (March 2026) • Full Address Input • Works Offline</p>
+      </div>
+    </div>
+
+    <!-- Step 1: Address & Client Info -->
+    <div class="card" id="step1">
+      <h2>Step 1: Client Address</h2>
+      
+      <label class="field-label">Client Name (optional - for your notes)</label>
+      <input type="text" id="clientName" placeholder="e.g., Maria G.">
+      
+      <label class="field-label">Street Address *</label>
+      <input type="text" id="street" placeholder="e.g., 1234 Main St">
+      
+      <label class="field-label">Apartment / Unit (if any)</label>
+      <input type="text" id="unit" placeholder="e.g., Apt 2B">
+      
+      <div class="row-3">
+        <div>
+          <label class="field-label">City *</label>
+          <input type="text" id="city" placeholder="e.g., Kansas City">
+        </div>
+        <div>
+          <label class="field-label">State *</label>
+          <select id="state">
+            <option value="MO" selected>MO</option>
+            <option value="KS">KS</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">ZIP Code *</label>
+          <input type="text" id="zip" placeholder="e.g., 64108" maxlength="5">
+        </div>
+      </div>
+      
+      <label class="field-label">Household Size</label>
+      <select id="household">
+        <option value="1">1 person</option>
+        <option value="2">2 people</option>
+        <option value="3" selected>3-4 people</option>
+        <option value="5">5+ people</option>
+      </select>
+      
+      <label class="field-label">Internet Needs (check all that apply)</label>
+      <div class="checkbox-grid">
+        <label class="checkbox-item" id="needWorkLabel">
+          <input type="checkbox" id="needWork"> Work from home / video calls
+        </label>
+        <label class="checkbox-item" id="needSchoolLabel">
+          <input type="checkbox" id="needSchool"> Students / online school
+        </label>
+        <label class="checkbox-item" id="needStreamLabel">
+          <input type="checkbox" id="needStream"> Streaming / gaming
+        </label>
+      </div>
+      
+      <label class="field-label">Monthly Budget for Internet</label>
+      <select id="budget">
+        <option value="$0-15">$0-15/month (need assistance program)</option>
+        <option value="$15-30">$15-30/month</option>
+        <option value="$30-50" selected>$30-50/month</option>
+        <option value="$50+">$50+/month</option>
+      </select>
+      
+      <button class="btn-primary" id="toStep2">Next: Eligibility Screening →</button>
+    </div>
+
+    <!-- Step 2: Eligibility -->
+    <div class="card hidden" id="step2">
+      <h3>Step 2: Eligibility Screening</h3>
+      <p style="color: #8892a0; font-size: 14px; margin-bottom: 20px;">Does the client participate in any of these programs? This helps find discounted internet.</p>
+      
+      <div class="prog-list" id="progList">
+        <label class="checkbox-item" data-prog="snap">
+          <input type="checkbox"> SNAP (food stamps)
+        </label>
+        <label class="checkbox-item" data-prog="medicaid">
+          <input type="checkbox"> Medicaid
+        </label>
+        <label class="checkbox-item" data-prog="ssi">
+          <input type="checkbox"> SSI (Supplemental Security Income)
+        </label>
+        <label class="checkbox-item" data-prog="lunch">
+          <input type="checkbox"> Free/reduced school lunch
+        </label>
+        <label class="checkbox-item" data-prog="housing">
+          <input type="checkbox"> Federal Public Housing
+        </label>
+        <label class="checkbox-item" data-prog="veterans">
+          <input type="checkbox"> Veterans Pension
+        </label>
+        <label class="checkbox-item" data-prog="lifeline">
+          <input type="checkbox"> Lifeline (phone discount)
+        </label>
+        <label class="checkbox-item" data-prog="none">
+          <input type="checkbox"> None of the above
+        </label>
+      </div>
+      
+      <div class="btn-row">
+        <button class="btn-secondary" id="backTo1">← Back</button>
+        <button class="btn-primary" id="findISPs">🔍 Find Internet Options</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Results -->
+    <div class="card hidden" id="step3">
+      <div class="results-header">
+        <h2 id="resultsTitle">Results</h2>
+        <div class="copy-buttons">
+          <button class="btn-copy" id="copyTable">📊 Copy for Table</button>
+          <button class="btn-copy" id="copyBtn">📋 Copy Full Template</button>
+        </div>
+      </div>
+      
+      <div class="address-display" id="addressDisplay"></div>
+      <div id="warningBox"></div>
+      <div class="speed-rec" id="speedRec"></div>
+      
+      <div id="lowIncomeResults"></div>
+      <div id="allResults"></div>
+      
+      <div class="resources">
+        <h4>📚 Additional Resources</h4>
+        <div class="resources-grid">
+          <div class="resource-card">
+            <div class="name">Lifeline Program</div>
+            <div class="desc">$9.25/mo discount</div>
+            <div class="url">lifelinesupport.org</div>
+          </div>
+          <div class="resource-card">
+            <div class="name">PCs for People</div>
+            <div class="desc">Devices + Internet</div>
+            <div class="url">pcsforpeople.org</div>
+          </div>
+          <div class="resource-card">
+            <div class="name">KC Digital Drive</div>
+            <div class="desc">Local support</div>
+            <div class="url">kcdigitaldrive.org</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="btn-row" style="margin-top: 20px;">
+        <button class="btn-secondary" id="startOver">🔄 Start New Lookup</button>
+        <button class="btn-fcc" id="checkFCC">🌐 Verify on FCC Website</button>
+      </div>
+      <p style="font-size: 11px; color: #6b7280; margin-top: 10px; text-align: center;">FCC website shows exact address-level availability — use for verification</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p><strong>Data Source:</strong> FCC Broadband Map (March 2026) • KC Metro Counties</p>
+      <p>🔒 Privacy: All lookups happen locally. No addresses sent anywhere.</p>
+    </div>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // ZIP CODE TO COUNTY MAPPING (KC Metro Area)
+    // ═══════════════════════════════════════════════════════════════════════════════
+    const ZIP_TO_COUNTY = {
+      // Jackson County, MO (KCMO and surrounding)
+      "64050": "Jackson, MO", "64051": "Jackson, MO", "64052": "Jackson, MO", "64053": "Jackson, MO", "64054": "Jackson, MO",
+      "64055": "Jackson, MO", "64056": "Jackson, MO", "64057": "Jackson, MO", "64058": "Jackson, MO",
+      "64061": "Jackson, MO", "64062": "Jackson, MO", "64063": "Jackson, MO", "64064": "Jackson, MO", "64065": "Jackson, MO",
+      "64066": "Jackson, MO", "64067": "Jackson, MO", "64068": "Jackson, MO",
+      "64070": "Jackson, MO", "64071": "Jackson, MO", "64072": "Jackson, MO", "64073": "Jackson, MO", "64074": "Jackson, MO",
+      "64075": "Jackson, MO", "64076": "Jackson, MO", "64077": "Jackson, MO", "64078": "Jackson, MO", "64079": "Jackson, MO",
+      "64080": "Jackson, MO", "64081": "Jackson, MO", "64082": "Jackson, MO", "64083": "Jackson, MO", "64084": "Jackson, MO",
+      "64085": "Jackson, MO", "64086": "Jackson, MO", "64088": "Jackson, MO",
+      "64101": "Jackson, MO", "64102": "Jackson, MO", "64105": "Jackson, MO", "64106": "Jackson, MO", "64108": "Jackson, MO",
+      "64109": "Jackson, MO", "64110": "Jackson, MO", "64111": "Jackson, MO", "64112": "Jackson, MO", "64113": "Jackson, MO",
+      "64114": "Jackson, MO", "64116": "Jackson, MO", "64117": "Jackson, MO", "64118": "Jackson, MO",
+      "64119": "Jackson, MO", "64120": "Jackson, MO", "64121": "Jackson, MO", "64123": "Jackson, MO", "64124": "Jackson, MO",
+      "64125": "Jackson, MO", "64126": "Jackson, MO", "64127": "Jackson, MO", "64128": "Jackson, MO", "64129": "Jackson, MO",
+      "64130": "Jackson, MO", "64131": "Jackson, MO", "64132": "Jackson, MO", "64133": "Jackson, MO", "64134": "Jackson, MO",
+      "64136": "Jackson, MO", "64137": "Jackson, MO", "64138": "Jackson, MO", "64139": "Jackson, MO",
+      "64141": "Jackson, MO", "64144": "Jackson, MO", "64145": "Jackson, MO", "64146": "Jackson, MO", "64147": "Jackson, MO",
+      "64148": "Jackson, MO", "64149": "Jackson, MO",
+      "64156": "Jackson, MO", "64157": "Jackson, MO", "64158": "Jackson, MO",
+      "64161": "Jackson, MO", "64162": "Jackson, MO", "64163": "Jackson, MO", "64164": "Jackson, MO", "64165": "Jackson, MO",
+      "64166": "Jackson, MO", "64167": "Jackson, MO", "64168": "Jackson, MO",
+      "64170": "Jackson, MO", "64171": "Jackson, MO", "64179": "Jackson, MO",
+      "64180": "Jackson, MO", "64183": "Jackson, MO", "64184": "Jackson, MO", "64185": "Jackson, MO",
+      "64187": "Jackson, MO", "64188": "Jackson, MO", "64190": "Jackson, MO", "64191": "Jackson, MO",
+      "64195": "Jackson, MO", "64196": "Jackson, MO", "64197": "Jackson, MO", "64198": "Jackson, MO", "64199": "Jackson, MO",
+      
+      // Clay County, MO
+      "64014": "Clay, MO", "64015": "Clay, MO", "64016": "Clay, MO",
+      "64024": "Clay, MO", "64029": "Clay, MO",
+      "64034": "Clay, MO",
+      "64048": "Clay, MO",
+      "64060": "Clay, MO",
+      "64068": "Clay, MO",
+      "64089": "Clay, MO",
+      "64116": "Clay, MO", "64117": "Clay, MO", "64118": "Clay, MO", "64119": "Clay, MO",
+      "64150": "Clay, MO", "64151": "Clay, MO", "64152": "Clay, MO", "64153": "Clay, MO", "64154": "Clay, MO", "64155": "Clay, MO",
+      "64156": "Clay, MO", "64157": "Clay, MO", "64158": "Clay, MO",
+      
+      // Platte County, MO
+      "64079": "Platte, MO",
+      "64083": "Platte, MO",
+      "64098": "Platte, MO",
+      "64151": "Platte, MO", "64152": "Platte, MO", "64153": "Platte, MO", "64154": "Platte, MO",
+      "64163": "Platte, MO", "64164": "Platte, MO", "64165": "Platte, MO",
+      
+      // Cass County, MO
+      "64011": "Cass, MO", "64012": "Cass, MO",
+      "64019": "Cass, MO",
+      "64034": "Cass, MO",
+      "64061": "Cass, MO",
+      "64070": "Cass, MO",
+      "64078": "Cass, MO",
+      "64080": "Cass, MO",
+      "64083": "Cass, MO",
+      "64093": "Cass, MO",
+      "64147": "Cass, MO",
+      
+      // Wyandotte County, KS (KCK)
+      "66101": "Wyandotte, KS", "66102": "Wyandotte, KS", "66103": "Wyandotte, KS", "66104": "Wyandotte, KS", "66105": "Wyandotte, KS",
+      "66106": "Wyandotte, KS", "66109": "Wyandotte, KS",
+      "66110": "Wyandotte, KS", "66111": "Wyandotte, KS", "66112": "Wyandotte, KS", "66113": "Wyandotte, KS", "66115": "Wyandotte, KS",
+      "66117": "Wyandotte, KS", "66118": "Wyandotte, KS", "66119": "Wyandotte, KS",
+      
+      // Johnson County, KS
+      "66002": "Johnson, KS",
+      "66006": "Johnson, KS", "66007": "Johnson, KS",
+      "66012": "Johnson, KS", "66013": "Johnson, KS",
+      "66018": "Johnson, KS",
+      "66021": "Johnson, KS", "66025": "Johnson, KS",
+      "66030": "Johnson, KS", "66031": "Johnson, KS",
+      "66061": "Johnson, KS", "66062": "Johnson, KS",
+      "66083": "Johnson, KS", "66085": "Johnson, KS",
+      "66201": "Johnson, KS", "66202": "Johnson, KS", "66203": "Johnson, KS", "66204": "Johnson, KS", "66205": "Johnson, KS",
+      "66206": "Johnson, KS", "66207": "Johnson, KS", "66208": "Johnson, KS", "66209": "Johnson, KS", "66210": "Johnson, KS",
+      "66211": "Johnson, KS", "66212": "Johnson, KS", "66213": "Johnson, KS", "66214": "Johnson, KS", "66215": "Johnson, KS",
+      "66216": "Johnson, KS", "66217": "Johnson, KS", "66218": "Johnson, KS", "66219": "Johnson, KS", "66220": "Johnson, KS",
+      "66221": "Johnson, KS", "66222": "Johnson, KS", "66223": "Johnson, KS", "66224": "Johnson, KS", "66225": "Johnson, KS",
+      "66226": "Johnson, KS", "66227": "Johnson, KS",
+      "66250": "Johnson, KS", "66251": "Johnson, KS",
+      "66282": "Johnson, KS", "66283": "Johnson, KS", "66285": "Johnson, KS", "66286": "Johnson, KS",
+    };
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // ISP DATA - From FCC March 2026 (same as offline version)
+    // ═══════════════════════════════════════════════════════════════════════════════
+    const ISP_DATA = [
+      {name:"AT&T",tech:"DSL/Fiber",speed:5000,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-800-288-2020",lowIncome:{prog:"AT&T Access",price:"$10/mo",spd:"100 Mbps",elig:"SNAP, SSI, Medicaid, free lunch",matches:["snap","ssi","medicaid","lunch"]}},
+      {name:"Spectrum",tech:"Cable/Fiber",speed:1000,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-833-267-6094",lowIncome:{prog:"Spectrum Internet Assist",price:"$17.99/mo",spd:"30 Mbps",elig:"SSI, free lunch, Medicaid",matches:["ssi","lunch","medicaid"]}},
+      {name:"Xfinity",tech:"Cable/Fiber",speed:10000,counties:["Jackson, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-800-934-6489",lowIncome:{prog:"Internet Essentials",price:"$9.95/mo",spd:"50 Mbps",elig:"SNAP, Medicaid, housing, SSI",matches:["snap","medicaid","housing","ssi"]}},
+      {name:"PCs for People",tech:"Mobile Hotspot",speed:100,counties:["Jackson, MO","Wyandotte, KS"],phone:"1-877-244-0767",lowIncome:{prog:"PCs for People Internet",price:"$15/mo",spd:"100 Mbps",elig:"200% poverty line, SNAP, Medicaid",matches:["snap","medicaid"]}},
+      {name:"T-Mobile",tech:"5G Home Internet",speed:245,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-844-275-9310",lowIncome:{prog:"Project 10Million",price:"Free",spd:"100GB/yr hotspot",elig:"Students in free/reduced lunch",matches:["lunch"]}},
+      {name:"Google Fiber",tech:"Fiber",speed:8000,counties:["Jackson, MO","Wyandotte, KS","Johnson, KS"],phone:"1-866-777-7550",lowIncome:null},
+      {name:"Brightspeed",tech:"DSL/Fiber",speed:2000,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-833-692-7773",lowIncome:null},
+      {name:"Mediacom Xtream",tech:"Cable",speed:1000,counties:["Cass, MO","Clay, MO","Johnson, KS"],phone:"1-855-633-4226",lowIncome:null},
+      {name:"Everfast Fiber",tech:"Fiber",speed:1000,counties:["Jackson, MO","Johnson, KS","Wyandotte, KS"],phone:"Check website",lowIncome:null},
+      {name:"Cox Communications",tech:"Fiber",speed:2000,counties:["Johnson, KS"],phone:"1-800-234-3993",lowIncome:null},
+      {name:"Midco",tech:"Cable/Fiber",speed:5000,counties:["Wyandotte, KS"],phone:"Check website",lowIncome:null},
+      {name:"Consolidated Communications",tech:"DSL",speed:500,counties:["Cass, MO","Clay, MO","Jackson, MO","Johnson, KS","Platte, MO"],phone:"Check website",lowIncome:null},
+      {name:"KC Fiber",tech:"Fiber",speed:1000,counties:["Jackson, MO"],phone:"Check website",lowIncome:null},
+      {name:"KC Web",tech:"Fiber",speed:1000,counties:["Jackson, MO"],phone:"Check website",lowIncome:null},
+      {name:"Fidium Fiber",tech:"Fiber",speed:2000,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO"],phone:"1-844-343-4861",lowIncome:null},
+      {name:"United Fiber",tech:"Fiber",speed:1000,counties:["Jackson, MO","Cass, MO"],phone:"Check website",lowIncome:null},
+      {name:"Conexon Connect",tech:"Fiber",speed:1000,counties:["Cass, MO"],phone:"Check website",lowIncome:null},
+    ];
+
+    let selectedProgs = [];
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // HELPER FUNCTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    function getCountyFromZip(zip) {
+      return ZIP_TO_COUNTY[zip] || null;
+    }
+
+    // Checkbox styling
+    document.querySelectorAll('.checkbox-item input').forEach(cb => {
+      cb.addEventListener('change', () => {
+        cb.closest('.checkbox-item').classList.toggle('selected', cb.checked);
+      });
+    });
+
+    // Program selection
+    document.querySelectorAll('#progList .checkbox-item').forEach(item => {
+      const cb = item.querySelector('input');
+      const prog = item.dataset.prog;
+      cb.addEventListener('change', () => {
+        if (cb.checked) {
+          selectedProgs.push(prog);
+        } else {
+          selectedProgs = selectedProgs.filter(p => p !== prog);
+        }
+        item.classList.toggle('selected', cb.checked);
+      });
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // NAVIGATION
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    document.getElementById('toStep2').addEventListener('click', () => {
+      const street = document.getElementById('street').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const zip = document.getElementById('zip').value.trim();
+      
+      if (!street || !city || !zip) {
+        alert('Please enter street address, city, and ZIP code');
+        return;
+      }
+      if (!/^\d{5}$/.test(zip)) {
+        alert('Please enter a valid 5-digit ZIP code');
+        return;
+      }
+      
+      document.getElementById('step1').classList.add('hidden');
+      document.getElementById('step2').classList.remove('hidden');
+    });
+
+    document.getElementById('backTo1').addEventListener('click', () => {
+      document.getElementById('step2').classList.add('hidden');
+      document.getElementById('step1').classList.remove('hidden');
+    });
+
+    document.getElementById('startOver').addEventListener('click', () => {
+      document.getElementById('step3').classList.add('hidden');
+      document.getElementById('step1').classList.remove('hidden');
+      document.getElementById('clientName').value = '';
+      document.getElementById('street').value = '';
+      document.getElementById('unit').value = '';
+      document.getElementById('city').value = '';
+      document.getElementById('zip').value = '';
+      document.getElementById('household').value = '3';
+      document.getElementById('needWork').checked = false;
+      document.getElementById('needSchool').checked = false;
+      document.getElementById('needStream').checked = false;
+      document.querySelectorAll('.checkbox-item').forEach(i => i.classList.remove('selected'));
+      document.querySelectorAll('#progList input').forEach(cb => cb.checked = false);
+      selectedProgs = [];
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // MAIN LOOKUP
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    document.getElementById('findISPs').addEventListener('click', () => {
+      const clientName = document.getElementById('clientName').value.trim() || 'Not provided';
+      const street = document.getElementById('street').value.trim();
+      const unit = document.getElementById('unit').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const state = document.getElementById('state').value;
+      const zip = document.getElementById('zip').value.trim();
+      const household = parseInt(document.getElementById('household').value);
+      const needWork = document.getElementById('needWork').checked;
+      const needSchool = document.getElementById('needSchool').checked;
+      const needStream = document.getElementById('needStream').checked;
+      const budget = document.getElementById('budget').value;
+
+      const fullAddress = unit 
+        ? `${street}, ${unit}, ${city}, ${state} ${zip}`
+        : `${street}, ${city}, ${state} ${zip}`;
+
+      // Get county from ZIP
+      const county = getCountyFromZip(zip);
+      
+      // Calculate recommended speed
+      let recSpeed = 25 + (household - 1) * 25;
+      if (needWork) recSpeed += 50;
+      if (needSchool) recSpeed += 50;
+      if (needStream) recSpeed += 25;
+
+      // Filter ISPs by county
+      let available = [];
+      let warning = '';
+      
+      if (county) {
+        available = ISP_DATA.filter(isp => isp.counties.includes(county));
+      } else {
+        // ZIP not in KC metro - show all ISPs with a warning
+        warning = `ZIP code ${zip} is not in our KC metro database. Showing all KC-area providers — availability at this address may vary. Consider checking the <a href="https://broadbandmap.fcc.gov" target="_blank" style="color: #3498db;">FCC website</a> directly.`;
+        available = ISP_DATA;
+      }
+
+      // Find matching low-income programs
+      const matching = available.filter(isp => 
+        isp.lowIncome && isp.lowIncome.matches.some(m => selectedProgs.includes(m))
+      );
+
+      // Sort: matching low-income first, then by speed
+      available.sort((a, b) => {
+        const aMatch = matching.includes(a);
+        const bMatch = matching.includes(b);
+        if (aMatch && !bMatch) return -1;
+        if (bMatch && !aMatch) return 1;
+        if (a.lowIncome && !b.lowIncome) return -1;
+        if (b.lowIncome && !a.lowIncome) return 1;
+        return b.speed - a.speed;
+      });
+
+      // Show results
+      document.getElementById('step2').classList.add('hidden');
+      document.getElementById('step3').classList.remove('hidden');
+
+      // Update UI
+      document.getElementById('resultsTitle').textContent = `Results (${available.length} providers)`;
+      document.getElementById('addressDisplay').innerHTML = `<strong>Address:</strong> ${fullAddress}` + 
+        (county ? `<span class="county-badge">${county}</span>` : '');
+      
+      document.getElementById('warningBox').innerHTML = warning ? `<div class="warning-box">${warning}</div>` : '';
+      
+      let speedHtml = `<strong>Recommended Speed:</strong> ${recSpeed}+ Mbps`;
+      if (matching.length > 0) {
+        speedHtml += ` &nbsp;•&nbsp; <strong>Qualifies for:</strong> ${matching.map(m => m.lowIncome.prog).join(', ')}`;
+      }
+      document.getElementById('speedRec').innerHTML = speedHtml;
+
+      // Low-income results
+      let lowHtml = '';
+      if (matching.length > 0) {
+        lowHtml = '<h4 class="section-title">★ RECOMMENDED LOW-INCOME PROGRAMS</h4>';
+        matching.forEach(isp => {
+          lowHtml += `
+            <div class="low-income-card">
+              <div class="row">
+                <div>
+                  <h4>${isp.name} — ${isp.lowIncome.prog}</h4>
+                  <p class="phone">${isp.phone}</p>
+                </div>
+                <div style="text-align: right;">
+                  <div class="price">${isp.lowIncome.price}</div>
+                  <div class="speed">${isp.lowIncome.spd}</div>
+                </div>
+              </div>
+              <div class="elig"><strong>Eligibility:</strong> ${isp.lowIncome.elig}</div>
+            </div>
+          `;
+        });
+      }
+      document.getElementById('lowIncomeResults').innerHTML = lowHtml;
+
+      // All providers
+      let allHtml = '<h4 class="section-title gray">ALL AVAILABLE PROVIDERS</h4>';
+      available.forEach(isp => {
+        const qualifies = isp.lowIncome && isp.lowIncome.matches.some(m => selectedProgs.includes(m));
+        allHtml += `
+          <div class="isp-card">
+            <div>
+              <h4>${isp.name}</h4>
+              <p class="meta">${isp.tech} • Up to ${isp.speed} Mbps • ${isp.phone}</p>
+            </div>
+            ${qualifies ? `<span class="badge">Qualifies: ${isp.lowIncome.price}</span>` : ''}
+          </div>
+        `;
+      });
+      document.getElementById('allResults').innerHTML = allHtml;
+
+      // Store for copy
+      window.lookupData = {
+        clientName, fullAddress, county: county || 'Unknown',
+        household, needWork, needSchool, needStream, budget, recSpeed,
+        matching, available, selectedProgs
+      };
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // COPY TEMPLATE
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    // Copy for Table button (rich HTML for Google Docs)
+    document.getElementById('copyTable').addEventListener('click', async () => {
+      const d = window.lookupData;
+      if (!d) {
+        alert('No results to copy');
+        return;
+      }
+      
+      // Build HTML table
+      let html = `<table style="border-collapse: collapse; width: 100%;">
+        <tr style="background: #f0f0f0;">
+          <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Provider</th>
+          <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Top Affordable Plan</th>
+          <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Speed (Mbps)</th>
+        </tr>`;
+      
+      // First add low-income programs the client qualifies for (highlighted)
+      d.matching.forEach(isp => {
+        html += `<tr style="background: #fff9e6;">
+          <td style="border: 1px solid #ccc; padding: 8px;"><strong>${isp.name}</strong></td>
+          <td style="border: 1px solid #ccc; padding: 8px;">${isp.lowIncome.prog} (${isp.lowIncome.price}) ★</td>
+          <td style="border: 1px solid #ccc; padding: 8px;">${isp.lowIncome.spd}</td>
+        </tr>`;
+      });
+      
+      // Then add other providers (skip duplicates from matching)
+      const matchingNames = d.matching.map(m => m.name);
+      d.available.filter(isp => !matchingNames.includes(isp.name)).forEach(isp => {
+        const plan = isp.lowIncome ? `${isp.lowIncome.prog} available` : 'Standard plans';
+        html += `<tr>
+          <td style="border: 1px solid #ccc; padding: 8px;">${isp.name}</td>
+          <td style="border: 1px solid #ccc; padding: 8px;">${plan}</td>
+          <td style="border: 1px solid #ccc; padding: 8px;">${isp.speed} Mbps</td>
+        </tr>`;
+      });
+      
+      html += '</table>';
+
+      // Copy as rich HTML
+      try {
+        const blob = new Blob([html], { type: 'text/html' });
+        const clipboardItem = new ClipboardItem({ 'text/html': blob });
+        await navigator.clipboard.write([clipboardItem]);
+        
+        const btn = document.getElementById('copyTable');
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = '📊 Copy for Table';
+          btn.classList.remove('copied');
+        }, 2000);
+      } catch (err) {
+        // Fallback to plain text if HTML copy fails
+        let plainText = 'Provider\tTop Affordable Plan\tSpeed\n';
+        d.matching.forEach(isp => {
+          plainText += `${isp.name}\t${isp.lowIncome.prog} (${isp.lowIncome.price})\t${isp.lowIncome.spd}\n`;
+        });
+        const matchingNames = d.matching.map(m => m.name);
+        d.available.filter(isp => !matchingNames.includes(isp.name)).forEach(isp => {
+          const plan = isp.lowIncome ? `${isp.lowIncome.prog} available` : 'Standard plans';
+          plainText += `${isp.name}\t${plan}\t${isp.speed} Mbps\n`;
+        });
+        await navigator.clipboard.writeText(plainText.trim());
+        
+        const btn = document.getElementById('copyTable');
+        btn.textContent = '✓ Copied (text)';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = '📊 Copy for Table';
+          btn.classList.remove('copied');
+        }, 2000);
+      }
+    });
+
+    // Copy Full Template button
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const d = window.lookupData;
+      const timestamp = new Date().toLocaleString();
+      
+      let template = `════════════════════════════════════════════════════════════
+INTERNET OPTIONS - DIGITAL NAVIGATOR ASSESSMENT
+Generated: ${timestamp}
+Data Source: FCC Broadband Map (March 2026)
+════════════════════════════════════════════════════════════
+
+CLIENT INFO:
+Name: ${d.clientName}
+Address: ${d.fullAddress}
+County: ${d.county}
+Household Size: ${d.household}
+Work from home: ${d.needWork ? 'Yes' : 'No'}
+Students at home: ${d.needSchool ? 'Yes' : 'No'}
+Streaming/gaming: ${d.needStream ? 'Yes' : 'No'}
+Budget: ${d.budget}
+
+RECOMMENDED SPEED: ${d.recSpeed}+ Mbps
+
+${d.matching.length > 0 ? 'QUALIFIES FOR: ' + d.matching.map(m => m.lowIncome.prog).join(', ') : 'No low-income program eligibility identified'}
+
+════════════════════════════════════════════════════════════
+AVAILABLE PROVIDERS:
+════════════════════════════════════════════════════════════
+
+`;
+
+      if (d.matching.length > 0) {
+        template += `★★★ RECOMMENDED LOW-INCOME PROGRAMS ★★★\n\n`;
+        d.matching.forEach(isp => {
+          template += `► ${isp.name} - ${isp.lowIncome.prog}\n`;
+          template += `  Price: ${isp.lowIncome.price} | Speed: ${isp.lowIncome.spd}\n`;
+          template += `  Phone: ${isp.phone}\n`;
+          template += `  Eligibility: ${isp.lowIncome.elig}\n\n`;
+        });
+        template += `────────────────────────────────────────────────────────────\n\n`;
+      }
+
+      template += `ALL PROVIDERS:\n\n`;
+      d.available.forEach((isp, i) => {
+        template += `${i + 1}. ${isp.name}\n`;
+        template += `   Technology: ${isp.tech}\n`;
+        template += `   Max Speed: ${isp.speed} Mbps\n`;
+        template += `   Phone: ${isp.phone}\n`;
+        if (isp.lowIncome) {
+          template += `   ★ Low-income available: ${isp.lowIncome.prog} (${isp.lowIncome.price})\n`;
+        }
+        template += `\n`;
+      });
+
+      template += `════════════════════════════════════════════════════════════
+ADDITIONAL RESOURCES:
+• Lifeline Program: $9.25/mo discount — lifelinesupport.org
+• PCs for People: Devices + internet — pcsforpeople.org
+• KC Digital Drive: kcdigitaldrive.org
+• FCC Broadband Map: broadbandmap.fcc.gov
+════════════════════════════════════════════════════════════
+NOTE: Availability varies by exact address. Confirm with provider.
+Privacy: This lookup used local data only - no info was transmitted.
+════════════════════════════════════════════════════════════`;
+
+      navigator.clipboard.writeText(template).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = '📋 Copy Full Template';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    });
+
+    // FCC Website button
+    document.getElementById('checkFCC').addEventListener('click', () => {
+      // Copy address to clipboard for easy pasting on FCC site
+      if (window.lookupData) {
+        navigator.clipboard.writeText(window.lookupData.fullAddress).then(() => {
+          alert('Address copied to clipboard!\\n\\nThe FCC website will open — just paste the address in their search box.');
+          window.open('https://broadbandmap.fcc.gov/', '_blank');
+        });
+      } else {
+        window.open('https://broadbandmap.fcc.gov/', '_blank');
+      }
+    });
+  </script>
+</body>
+</html>
