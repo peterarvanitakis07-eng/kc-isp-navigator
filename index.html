@@ -943,11 +943,13 @@ Privacy: This lookup used local data only - no info was transmitted.
     // FCC Website button
     document.getElementById('checkFCC').addEventListener('click', () => {
       // Copy address to clipboard for easy pasting on FCC site
-      if (window.lookupData) {
-        navigator.clipboard.writeText(window.lookupData.fullAddress).then(() => {
-          alert('Address copied to clipboard!\\n\\nThe FCC website will open — just paste the address in their search box.');
-          window.open('https://broadbandmap.fcc.gov/', '_blank');
-        });
+    if (window.lookupData) {
+    if (window.geoData && window.geoData.fccUrl) {
+      window.open(window.geoData.fccUrl, '_blank');
+    } else {
+      alert('Geocoding data not available. Please try the lookup again.');
+    }
+  });
       } else {
         window.open('https://broadbandmap.fcc.gov/', '_blank');
       }
