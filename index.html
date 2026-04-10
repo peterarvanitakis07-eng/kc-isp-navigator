@@ -421,6 +421,45 @@
 
   <script>
     // ═══════════════════════════════════════════════════════════════════════════════
+   
+    async function geocodeAddress(address, city, state, zip) {
+  const baseUrl = 'https://kc-isp-proxy-production.up.railway.app';
+  const params = new URLSearchParams({ 
+    address: address, 
+    city: city, 
+    state: state, 
+    zip: zip 
+  });
+  
+  try {
+    const response = await fetch(`${baseUrl}/api/geocode?${params}`);
+    const data = await response.json();
+    
+    if (data.success) {
+      return {
+        success: true,
+        latitude: data.address.latitude,
+        longitude: data.address.longitude,
+        matchedAddress: data.address.matched,
+        county: data.geography.county.name,
+        fccUrl: data.fcc_verification_url
+      };
+    } else {
+      return {
+        success: false,
+        error: data.message || 'Could not geocode address'
+      };
+    }
+  } catch (error) {
+    console.error('Geocoding error:', error);
+    return {
+      success: false,
+      error: 'Failed to connect to geocoding service'
+    };
+  }
+}
+    
+    
     // ZIP CODE TO COUNTY MAPPING (KC Metro Area)
     // ═══════════════════════════════════════════════════════════════════════════════
     const ZIP_TO_COUNTY = {
@@ -564,10 +603,24 @@
     // NAVIGATION
     // ═══════════════════════════════════════════════════════════════════════════════
 
-    document.getElementById('toStep2').addEventListener('click', () => {
+ document.getElementById('toStep2').addEventListener('click', async () => {
       const street = document.getElementById('street').value.trim();
       const city = document.getElementById('city').value.trim();
       const zip = document.getElementById('zip').value.trim();
+   // Determine state from ZIP code (KC metro spans MO and KS)
+  const state = (zip >= '66000' && zip <= '66999') ? 'KS' : 'MO';
+  
+  // Geocode the address using Railway proxy
+  const geoResult = await geocodeAddress(street, city, state, zip);
+  
+  if (!geoResult.success) {
+    alert('Address not found. Please verify and try again:\n' + geoResult.error);
+    return;
+  }
+  
+  // Store geocoding result for later use
+  window.geoData = geoResult;
+  console.log('Address geocoded:', geoResult);
       
       if (!street || !city || !zip) {
         alert('Please enter street address, city, and ZIP code');
@@ -818,14 +871,20 @@ Data Source: FCC Broadband Map (March 2026)
 
 CLIENT INFO:
 Name: ${d.clientName}
-Address: ${d.fullAddress}
+Address: ${window.geoData ? window.geoData.matchedAddress : d.fullAddress}
 County: ${d.county}
 Household Size: ${d.household}
 Work from home: ${d.needWork ? 'Yes' : 'No'}
 Students at home: ${d.needSchool ? 'Yes' : 'No'}
 Streaming/gaming: ${d.needStream ? 'Yes' : 'No'}
 Budget: ${d.budget}
+=================================================================
+GEOCODED ADDRESS VERIFICATION:
+Matched Address: ${window.geoData ? window.geoData.matchedAddress : 'N/A'}
+Coordinates: ${window.geoData ? window.geoData.latitude + ', ' + window.geoData.longitude : 'N/A'}
 
+🔍 VERIFY EXACT ADDRESS: ${window.geoData ? window.geoData.fccUrl : 'https://broadbandmap.fcc.gov'}
+=================================================================
 RECOMMENDED SPEED: ${d.recSpeed}+ Mbps
 
 ${d.matching.length > 0 ? 'QUALIFIES FOR: ' + d.matching.map(m => m.lowIncome.prog).join(', ') : 'No low-income program eligibility identified'}
