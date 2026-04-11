@@ -348,13 +348,13 @@
     // ISP DATA - From FCC March 2026
     // ═══════════════════════════════════════════════════════════════════
     const ISP_DATA = [
-      {name:"AT&T",tech:"DSL/Fiber",speed:5000,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-800-288-2020",lowIncome:{prog:"AT&T Access",price:"$10/mo",spd:"100 Mbps",elig:"SNAP, SSI, Medicaid, free lunch",matches:["snap","ssi","medicaid","lunch"]}},
-      {name:"Spectrum",tech:"Cable/Fiber",speed:1000,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-833-267-6094",lowIncome:{prog:"Spectrum Internet Assist",price:"$17.99/mo",spd:"30 Mbps",elig:"SSI, free lunch, Medicaid",matches:["ssi","lunch","medicaid"]}},
+      {name:"AT&T",tech:"DSL/Fiber",speed:5000,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-800-288-2020",lowIncome:{prog:"AT&T Access",price:"$10/mo",spd:"100 Mbps",elig:"SNAP, SSI, Medicaid, free lunch",matches:["snap","ssi","medicaid","lunch"]}},
+      {name:"Spectrum",tech:"Cable/Fiber",speed:1000,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-833-267-6094",lowIncome:{prog:"Spectrum Internet Assist",price:"$17.99/mo",spd:"30 Mbps",elig:"SSI, free lunch, Medicaid",matches:["ssi","lunch","medicaid"]}},
       {name:"Xfinity",tech:"Cable/Fiber",speed:10000,counties:["Jackson, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-800-934-6489",lowIncome:{prog:"Internet Essentials",price:"$9.95/mo",spd:"50 Mbps",elig:"SNAP, Medicaid, housing, SSI",matches:["snap","medicaid","housing","ssi"]}},
       {name:"PCs for People",tech:"Mobile Hotspot",speed:100,counties:["Jackson, MO","Wyandotte, KS"],phone:"1-877-244-0767",lowIncome:{prog:"PCs for People Internet",price:"$15/mo",spd:"100 Mbps",elig:"200% poverty line, SNAP, Medicaid",matches:["snap","medicaid"]}},
-      {name:"T-Mobile",tech:"5G Home Internet",speed:245,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-844-275-9310",lowIncome:{prog:"Project 10Million",price:"Free",spd:"100GB/yr hotspot",elig:"Students in free/reduced lunch",matches:["lunch"]}},
+      {name:"T-Mobile",tech:"5G Home Internet",speed:245,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-844-275-9310",lowIncome:{prog:"Project 10Million",price:"Free",spd:"100GB/yr hotspot",elig:"Students in free/reduced lunch",matches:["lunch"]}},
       {name:"Google Fiber",tech:"Fiber",speed:8000,counties:["Jackson, MO","Wyandotte, KS","Johnson, KS"],phone:"1-866-777-7550",lowIncome:null},
-      {name:"Brightspeed",tech:"DSL/Fiber",speed:2000,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-833-692-7773",lowIncome:null},
+      {name:"Brightspeed",tech:"DSL/Fiber",speed:2000,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-833-692-7773",lowIncome:null},
       {name:"Mediacom Xtream",tech:"Cable",speed:1000,counties:["Cass, MO","Clay, MO","Johnson, KS"],phone:"1-855-633-4226",lowIncome:null},
       {name:"Everfast Fiber",tech:"Fiber",speed:1000,counties:["Jackson, MO","Johnson, KS","Wyandotte, KS"],phone:"Check website",lowIncome:null},
       {name:"Cox Communications",tech:"Fiber",speed:2000,counties:["Johnson, KS"],phone:"1-800-234-3993",lowIncome:null},
@@ -365,6 +365,7 @@
       {name:"Fidium Fiber",tech:"Fiber",speed:2000,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO"],phone:"1-844-343-4861",lowIncome:null},
       {name:"United Fiber",tech:"Fiber",speed:1000,counties:["Jackson, MO","Cass, MO"],phone:"Check website",lowIncome:null},
       {name:"Conexon Connect",tech:"Fiber",speed:1000,counties:["Cass, MO"],phone:"Check website",lowIncome:null},
+      {name:"Starlink",tech:"Satellite",speed:220,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-855-786-2576",lowIncome:null},
     ];
 
     let selectedProgs = [];
