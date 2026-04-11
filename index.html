@@ -288,53 +288,60 @@
     // ZIP CODE TO COUNTY MAPPING (KC Metro Area)
     // ═══════════════════════════════════════════════════════════════════
     const ZIP_TO_COUNTY = {
-      "64050": "Jackson, MO", "64051": "Jackson, MO", "64052": "Jackson, MO", "64053": "Jackson, MO", "64054": "Jackson, MO",
-      "64055": "Jackson, MO", "64056": "Jackson, MO", "64057": "Jackson, MO", "64058": "Jackson, MO",
-      "64061": "Jackson, MO", "64062": "Jackson, MO", "64063": "Jackson, MO", "64064": "Jackson, MO", "64065": "Jackson, MO",
-      "64066": "Jackson, MO", "64067": "Jackson, MO", "64068": "Jackson, MO",
-      "64070": "Jackson, MO", "64071": "Jackson, MO", "64072": "Jackson, MO", "64073": "Jackson, MO", "64074": "Jackson, MO",
-      "64075": "Jackson, MO", "64076": "Jackson, MO", "64077": "Jackson, MO", "64078": "Jackson, MO", "64079": "Jackson, MO",
-      "64080": "Jackson, MO", "64081": "Jackson, MO", "64082": "Jackson, MO", "64083": "Jackson, MO", "64084": "Jackson, MO",
-      "64085": "Jackson, MO", "64086": "Jackson, MO", "64088": "Jackson, MO",
-      "64101": "Jackson, MO", "64102": "Jackson, MO", "64105": "Jackson, MO", "64106": "Jackson, MO", "64108": "Jackson, MO",
-      "64109": "Jackson, MO", "64110": "Jackson, MO", "64111": "Jackson, MO", "64112": "Jackson, MO", "64113": "Jackson, MO",
-      "64114": "Jackson, MO", "64116": "Jackson, MO", "64117": "Jackson, MO", "64118": "Jackson, MO",
-      "64119": "Jackson, MO", "64120": "Jackson, MO", "64121": "Jackson, MO", "64123": "Jackson, MO", "64124": "Jackson, MO",
-      "64125": "Jackson, MO", "64126": "Jackson, MO", "64127": "Jackson, MO", "64128": "Jackson, MO", "64129": "Jackson, MO",
-      "64130": "Jackson, MO", "64131": "Jackson, MO", "64132": "Jackson, MO", "64133": "Jackson, MO", "64134": "Jackson, MO",
-      "64136": "Jackson, MO", "64137": "Jackson, MO", "64138": "Jackson, MO", "64139": "Jackson, MO",
-      "64141": "Jackson, MO", "64144": "Jackson, MO", "64145": "Jackson, MO", "64146": "Jackson, MO", "64147": "Jackson, MO",
-      "64148": "Jackson, MO", "64149": "Jackson, MO",
-      "64156": "Jackson, MO", "64157": "Jackson, MO", "64158": "Jackson, MO",
-      "64161": "Jackson, MO", "64162": "Jackson, MO", "64163": "Jackson, MO", "64164": "Jackson, MO", "64165": "Jackson, MO",
-      "64166": "Jackson, MO", "64167": "Jackson, MO", "64168": "Jackson, MO",
-      "64170": "Jackson, MO", "64171": "Jackson, MO", "64179": "Jackson, MO",
-      "64180": "Jackson, MO", "64183": "Jackson, MO", "64184": "Jackson, MO", "64185": "Jackson, MO",
-      "64187": "Jackson, MO", "64188": "Jackson, MO", "64190": "Jackson, MO", "64191": "Jackson, MO",
-      "64195": "Jackson, MO", "64196": "Jackson, MO", "64197": "Jackson, MO", "64198": "Jackson, MO", "64199": "Jackson, MO",
-      "64014": "Clay, MO", "64015": "Clay, MO", "64016": "Clay, MO",
-      "64024": "Clay, MO", "64029": "Clay, MO", "64034": "Clay, MO", "64048": "Clay, MO", "64060": "Clay, MO", "64068": "Clay, MO",
-      "64089": "Clay, MO", "64116": "Clay, MO", "64117": "Clay, MO", "64118": "Clay, MO", "64119": "Clay, MO",
-      "64150": "Clay, MO", "64151": "Clay, MO", "64152": "Clay, MO", "64153": "Clay, MO", "64154": "Clay, MO", "64155": "Clay, MO",
-      "64156": "Clay, MO", "64157": "Clay, MO", "64158": "Clay, MO",
-      "64079": "Platte, MO", "64083": "Platte, MO", "64098": "Platte, MO",
-      "64151": "Platte, MO", "64152": "Platte, MO", "64153": "Platte, MO", "64154": "Platte, MO",
-      "64163": "Platte, MO", "64164": "Platte, MO", "64165": "Platte, MO",
-      "64011": "Cass, MO", "64012": "Cass, MO", "64019": "Cass, MO", "64034": "Cass, MO", "64061": "Cass, MO",
-      "64070": "Cass, MO", "64078": "Cass, MO", "64080": "Cass, MO", "64083": "Cass, MO", "64093": "Cass, MO", "64147": "Cass, MO",
-      "66101": "Wyandotte, KS", "66102": "Wyandotte, KS", "66103": "Wyandotte, KS", "66104": "Wyandotte, KS", "66105": "Wyandotte, KS",
-      "66106": "Wyandotte, KS", "66109": "Wyandotte, KS", "66110": "Wyandotte, KS", "66111": "Wyandotte, KS", "66112": "Wyandotte, KS",
-      "66113": "Wyandotte, KS", "66115": "Wyandotte, KS", "66117": "Wyandotte, KS", "66118": "Wyandotte, KS", "66119": "Wyandotte, KS",
-      "66002": "Johnson, KS", "66006": "Johnson, KS", "66007": "Johnson, KS", "66012": "Johnson, KS", "66013": "Johnson, KS",
-      "66018": "Johnson, KS", "66021": "Johnson, KS", "66025": "Johnson, KS", "66030": "Johnson, KS", "66031": "Johnson, KS",
-      "66061": "Johnson, KS", "66062": "Johnson, KS", "66083": "Johnson, KS", "66085": "Johnson, KS",
-      "66201": "Johnson, KS", "66202": "Johnson, KS", "66203": "Johnson, KS", "66204": "Johnson, KS", "66205": "Johnson, KS",
-      "66206": "Johnson, KS", "66207": "Johnson, KS", "66208": "Johnson, KS", "66209": "Johnson, KS", "66210": "Johnson, KS",
-      "66211": "Johnson, KS", "66212": "Johnson, KS", "66213": "Johnson, KS", "66214": "Johnson, KS", "66215": "Johnson, KS",
-      "66216": "Johnson, KS", "66217": "Johnson, KS", "66218": "Johnson, KS", "66219": "Johnson, KS", "66220": "Johnson, KS",
-      "66221": "Johnson, KS", "66222": "Johnson, KS", "66223": "Johnson, KS", "66224": "Johnson, KS", "66225": "Johnson, KS",
-      "66226": "Johnson, KS", "66227": "Johnson, KS", "66250": "Johnson, KS", "66251": "Johnson, KS",
-      "66282": "Johnson, KS", "66283": "Johnson, KS", "66285": "Johnson, KS", "66286": "Johnson, KS",
+      // Source: Census Bureau 2020 ZCTA-to-County Relationship File
+      // https://www2.census.gov/geo/docs/maps-data/data/rel2020/zcta520/tab20_zcta520_county20_natl.txt
+
+      // Jackson, MO
+      "64014": "Jackson, MO", "64015": "Jackson, MO", "64016": "Jackson, MO", "64029": "Jackson, MO", "64030": "Jackson, MO", "64034": "Jackson, MO",
+      "64050": "Jackson, MO", "64052": "Jackson, MO", "64053": "Jackson, MO", "64054": "Jackson, MO", "64055": "Jackson, MO", "64056": "Jackson, MO",
+      "64057": "Jackson, MO", "64058": "Jackson, MO", "64063": "Jackson, MO", "64064": "Jackson, MO", "64065": "Jackson, MO", "64066": "Jackson, MO",
+      "64070": "Jackson, MO", "64075": "Jackson, MO", "64081": "Jackson, MO", "64082": "Jackson, MO", "64086": "Jackson, MO", "64088": "Jackson, MO",
+      "64101": "Jackson, MO", "64102": "Jackson, MO", "64105": "Jackson, MO", "64106": "Jackson, MO", "64108": "Jackson, MO", "64109": "Jackson, MO",
+      "64110": "Jackson, MO", "64111": "Jackson, MO", "64112": "Jackson, MO", "64113": "Jackson, MO", "64114": "Jackson, MO", "64120": "Jackson, MO",
+      "64123": "Jackson, MO", "64124": "Jackson, MO", "64125": "Jackson, MO", "64126": "Jackson, MO", "64127": "Jackson, MO", "64128": "Jackson, MO",
+      "64129": "Jackson, MO", "64130": "Jackson, MO", "64131": "Jackson, MO", "64132": "Jackson, MO", "64133": "Jackson, MO", "64134": "Jackson, MO",
+      "64136": "Jackson, MO", "64137": "Jackson, MO", "64138": "Jackson, MO", "64139": "Jackson, MO", "64145": "Jackson, MO", "64146": "Jackson, MO",
+      "64147": "Jackson, MO", "64149": "Jackson, MO",
+
+      // Clay, MO
+      "64024": "Clay, MO", "64048": "Clay, MO", "64060": "Clay, MO", "64068": "Clay, MO", "64072": "Clay, MO", "64089": "Clay, MO",
+      "64116": "Clay, MO", "64117": "Clay, MO", "64118": "Clay, MO", "64119": "Clay, MO", "64155": "Clay, MO", "64156": "Clay, MO",
+      "64157": "Clay, MO", "64158": "Clay, MO", "64161": "Clay, MO", "64165": "Clay, MO", "64166": "Clay, MO", "64167": "Clay, MO",
+      "64492": "Clay, MO",
+
+      // Platte, MO
+      "64018": "Platte, MO", "64028": "Platte, MO", "64079": "Platte, MO", "64092": "Platte, MO", "64098": "Platte, MO", "64150": "Platte, MO",
+      "64151": "Platte, MO", "64152": "Platte, MO", "64153": "Platte, MO", "64154": "Platte, MO", "64163": "Platte, MO", "64164": "Platte, MO",
+      "64439": "Platte, MO", "64440": "Platte, MO", "64444": "Platte, MO", "64484": "Platte, MO",
+
+      // Cass, MO
+      "64012": "Cass, MO", "64040": "Cass, MO", "64061": "Cass, MO", "64078": "Cass, MO", "64080": "Cass, MO", "64083": "Cass, MO",
+      "64090": "Cass, MO", "64701": "Cass, MO", "64725": "Cass, MO", "64734": "Cass, MO", "64739": "Cass, MO", "64742": "Cass, MO",
+      "64743": "Cass, MO", "64746": "Cass, MO", "64747": "Cass, MO",
+
+      // Ray, MO
+      "64017": "Ray, MO", "64035": "Ray, MO", "64036": "Ray, MO", "64062": "Ray, MO", "64077": "Ray, MO", "64084": "Ray, MO",
+      "64085": "Ray, MO", "64624": "Ray, MO", "64637": "Ray, MO", "64668": "Ray, MO", "64671": "Ray, MO",
+
+      // Wyandotte, KS
+      "66101": "Wyandotte, KS", "66102": "Wyandotte, KS", "66103": "Wyandotte, KS", "66104": "Wyandotte, KS", "66105": "Wyandotte, KS", "66106": "Wyandotte, KS",
+      "66109": "Wyandotte, KS", "66111": "Wyandotte, KS", "66112": "Wyandotte, KS", "66115": "Wyandotte, KS", "66118": "Wyandotte, KS", "66160": "Wyandotte, KS",
+
+      // Johnson, KS
+      "66018": "Johnson, KS", "66021": "Johnson, KS", "66025": "Johnson, KS", "66030": "Johnson, KS", "66031": "Johnson, KS", "66061": "Johnson, KS",
+      "66062": "Johnson, KS", "66085": "Johnson, KS", "66202": "Johnson, KS", "66203": "Johnson, KS", "66204": "Johnson, KS", "66205": "Johnson, KS",
+      "66206": "Johnson, KS", "66207": "Johnson, KS", "66208": "Johnson, KS", "66209": "Johnson, KS", "66210": "Johnson, KS", "66211": "Johnson, KS",
+      "66212": "Johnson, KS", "66213": "Johnson, KS", "66214": "Johnson, KS", "66215": "Johnson, KS", "66216": "Johnson, KS", "66217": "Johnson, KS",
+      "66218": "Johnson, KS", "66219": "Johnson, KS", "66220": "Johnson, KS", "66221": "Johnson, KS", "66223": "Johnson, KS", "66224": "Johnson, KS",
+      "66226": "Johnson, KS", "66227": "Johnson, KS", "66251": "Johnson, KS",
+
+      // Leavenworth, KS
+      "66002": "Leavenworth, KS", "66007": "Leavenworth, KS", "66012": "Leavenworth, KS", "66020": "Leavenworth, KS", "66027": "Leavenworth, KS", "66043": "Leavenworth, KS",
+      "66044": "Leavenworth, KS", "66048": "Leavenworth, KS", "66052": "Leavenworth, KS", "66054": "Leavenworth, KS", "66086": "Leavenworth, KS", "66097": "Leavenworth, KS",
+
+      // Miami, KS
+      "66013": "Miami, KS", "66026": "Miami, KS", "66040": "Miami, KS", "66042": "Miami, KS", "66053": "Miami, KS", "66064": "Miami, KS",
+      "66071": "Miami, KS", "66072": "Miami, KS", "66083": "Miami, KS", "66092": "Miami, KS",
     };
 
     // ═══════════════════════════════════════════════════════════════════
