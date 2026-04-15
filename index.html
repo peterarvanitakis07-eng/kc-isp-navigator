@@ -77,6 +77,24 @@
     .county-badge { display: inline-block; background: rgba(52, 152, 219, 0.2); border: 1px solid rgba(52, 152, 219, 0.4); color: #3498db; padding: 4px 10px; border-radius: 6px; font-size: 12px; margin-left: 8px; }
     .block-badge { display: inline-block; background: rgba(0, 212, 170, 0.15); border: 1px solid rgba(0, 212, 170, 0.4); color: #00d4aa; padding: 4px 10px; border-radius: 6px; font-size: 12px; margin-left: 8px; }
     .warning-box { background: rgba(241, 196, 15, 0.15); border: 1px solid rgba(241, 196, 15, 0.4); border-radius: 10px; padding: 14px; margin-bottom: 16px; color: #f1c40f; font-size: 13px; }
+    .community-card { background: rgba(52, 152, 219, 0.07); border: 1px solid rgba(52, 152, 219, 0.22); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .community-card h4 { font-size: 14px; margin: 0 0 3px 0; }
+    .community-card .meta { font-size: 11px; color: #8892a0; }
+    .community-card .elig-note { font-size: 11px; color: #a8b2bc; margin-top: 5px; }
+    .community-card .free-badge { background: rgba(52, 152, 219, 0.2); border: 1px solid rgba(52, 152, 219, 0.35); padding: 5px 10px; border-radius: 6px; font-size: 13px; font-weight: 700; color: #3498db; white-space: nowrap; }
+    .section-title.blue { color: #3498db; margin-top: 20px; }
+    .btn-live { background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%); color: #fff; margin-bottom: 12px; }
+    .live-plans { margin-top: 6px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; min-height: 0; }
+    .live-chip { background: rgba(0,212,170,0.12); border: 1px solid rgba(0,212,170,0.3); color: #00d4aa; padding: 3px 8px; border-radius: 5px; font-size: 11px; }
+    .live-chip.li { background: rgba(255,193,7,0.12); border-color: rgba(255,193,7,0.3); color: #ffc107; }
+    .live-src { font-size: 10px; font-weight: 600; color: #00d4aa; margin-left: 4px; }
+    .live-src.err { color: #e57373; }
+    .live-loading { font-size: 11px; color: #8892a0; font-style: italic; }
+    .isp-pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .isp-pill { padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); font-size: 12px; color: #8892a0; }
+    .isp-pill.loading { color: #f1c40f; border-color: rgba(241,196,15,0.3); }
+    .isp-pill.done    { color: #00d4aa; border-color: rgba(0,212,170,0.3); }
+    .isp-pill.fail    { color: #e57373; border-color: rgba(231,76,60,0.3); }
     @media (max-width: 600px) {
       .checkbox-grid { grid-template-columns: 1fr; }
       .resources-grid { grid-template-columns: 1fr; }
@@ -183,8 +201,15 @@
       <div class="address-display" id="addressDisplay"></div>
       <div id="warningBox"></div>
       <div class="speed-rec" id="speedRec"></div>
+      <div id="livePriceSection" class="hidden">
+        <button class="btn-primary btn-live" id="getLivePricesBtn">⚡ Get Live Prices at This Address</button>
+        <div id="livePricesStatus" class="hidden">
+          <div class="isp-pill-row" id="ispPills"></div>
+        </div>
+      </div>
       <div id="lowIncomeResults"></div>
       <div id="allResults"></div>
+      <div id="communityResults"></div>
       <div class="resources">
         <h4>📚 Additional Resources</h4>
         <div class="resources-grid">
@@ -371,6 +396,50 @@
       {name:"Starlink",tech:"Satellite",speed:220,counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-855-786-2576",lowIncome:null},
     ];
 
+    // ═══════════════════════════════════════════════════════════════════
+    // COMMUNITY RESOURCES — Library hotspots + nonprofit ISPs
+    // Source: KCDD aLEGEND reference sheet (Jackie, updated Jan 2026)
+    // County assignments verified against library service area maps
+    // ═══════════════════════════════════════════════════════════════════
+    const COMMUNITY_RESOURCES = [
+      // Nonprofit ISPs
+      {name:"Human IT", category:"nonprofit", type:"Low-Income ISP", price:"$15/mo", speed:"25 Mbps",
+       counties:["Jackson, MO","Wyandotte, KS"],
+       phone:"Check website", url:"humanit.org",
+       elig:"Income proof required; letter of program participation"},
+      // Library hotspot checkout programs
+      {name:"KC Public Library", category:"hotspot", type:"Hotspot Checkout", price:"FREE", speed:null,
+       counties:["Jackson, MO"],
+       phone:"(816) 701-3400", url:"library.kcmo.org",
+       elig:"Library card required; 14-day checkout"},
+      {name:"Mid-Continent Library", category:"hotspot", type:"Hotspot Checkout", price:"FREE", speed:null,
+       counties:["Jackson, MO","Clay, MO","Platte, MO","Ray, MO"],
+       phone:"Check website", url:"mymcpl.org",
+       elig:"Library card required"},
+      {name:"Kansas City, KS Public Library", category:"hotspot", type:"Hotspot Checkout", price:"FREE", speed:null,
+       counties:["Wyandotte, KS"],
+       phone:"(913) 295-8250", url:"kckpl.org",
+       elig:"Library card required"},
+      {name:"Johnson County Library", category:"hotspot", type:"Hotspot Checkout", price:"FREE", speed:null,
+       counties:["Johnson, KS"],
+       phone:"(913) 826-4600", url:"jocolibrary.org",
+       elig:"Library card required"},
+      {name:"Olathe Public Library", category:"hotspot", type:"Hotspot Checkout", price:"FREE", speed:null,
+       counties:["Johnson, KS"],
+       phone:"(913) 971-6850", url:"olatheks.org/library",
+       elig:"Library card required"},
+    ];
+
+    // Maps ISP display name → scraper key used by /api/live-prices
+    const ISP_LIVE_KEYS = {
+      'AT&T':              'att',
+      'Spectrum':          'spectrum',
+      'Xfinity':           'xfinity',
+      'T-Mobile':          'tmobile',
+      'Starlink':          'starlink',
+      'Cox Communications':'cox',
+    };
+
     let selectedProgs = [];
 
     function getCountyFromZip(zip) { return ZIP_TO_COUNTY[zip] || null; }
@@ -439,6 +508,11 @@
     document.getElementById('startOver').addEventListener('click', () => {
       document.getElementById('step3').classList.add('hidden');
       document.getElementById('step1').classList.remove('hidden');
+      document.getElementById('livePriceSection').classList.add('hidden');
+      document.getElementById('livePricesStatus').classList.add('hidden');
+      document.getElementById('ispPills').innerHTML = '';
+      document.getElementById('getLivePricesBtn').textContent = '⚡ Get Live Prices at This Address';
+      document.getElementById('getLivePricesBtn').disabled = false;
       ['clientName','street','unit','city','zip'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('household').value = '3';
       document.getElementById('needWork').checked = false;
@@ -470,17 +544,29 @@
       const county = getCountyFromZip(zip);
 
       // ── Block-level lookup (new) ──────────────────────────────────
+      // FCC files some ISPs under different legal names — map them here
+      const ISP_ALIASES = {
+        'Starlink':  ['spacex services'],
+        'Xfinity':   ['comcast'],
+        'Spectrum':  ['charter communications', 'charter'],
+        'Brightspeed': ['lumen', 'centurylink'],
+      };
+
       let blockMatchedIsps = null;
       if (blockIspData && window.geoData?.blockGeoid) {
         const geoid = window.geoData.blockGeoid;
         const blockNames = blockIspData[geoid];
         if (blockNames && blockNames.length > 0) {
-          blockMatchedIsps = ISP_DATA.filter(isp =>
-            blockNames.some(bn =>
-              isp.name.toLowerCase().includes(bn.toLowerCase()) ||
-              bn.toLowerCase().includes(isp.name.toLowerCase())
-            )
-          );
+          blockMatchedIsps = ISP_DATA.filter(isp => {
+            const aliases = ISP_ALIASES[isp.name] || [];
+            return blockNames.some(bn => {
+              const bnLower = bn.toLowerCase();
+              const ispLower = isp.name.toLowerCase();
+              return ispLower.includes(bnLower) ||
+                     bnLower.includes(ispLower) ||
+                     aliases.some(alias => bnLower.includes(alias));
+            });
+          });
           if (blockMatchedIsps.length === 0) blockMatchedIsps = null;
         }
       }
@@ -555,14 +641,45 @@
       let allHtml = '<h4 class="section-title gray">ALL AVAILABLE PROVIDERS</h4>';
       available.forEach(isp => {
         const qualifies = isp.lowIncome && isp.lowIncome.matches.some(m => selectedProgs.includes(m));
-        allHtml += `<div class="isp-card">
-          <div><h4>${isp.name}</h4><p class="meta">${isp.tech} • Up to ${isp.speed} Mbps • ${isp.phone}</p></div>
+        const liveKey = ISP_LIVE_KEYS[isp.name] || null;
+        allHtml += `<div class="isp-card"${liveKey ? ` data-isp-key="${liveKey}"` : ''}>
+          <div>
+            <h4>${isp.name}</h4>
+            <p class="meta">${isp.tech} • Up to ${isp.speed} Mbps • ${isp.phone}</p>
+            ${liveKey ? `<div class="live-plans"></div>` : ''}
+          </div>
           ${qualifies ? `<span class="badge">Qualifies: ${isp.lowIncome.price}</span>` : ''}
         </div>`;
       });
       document.getElementById('allResults').innerHTML = allHtml;
 
-      window.lookupData = { clientName, fullAddress, county: county || 'Unknown', household, needWork, needSchool, needStream, budget, recSpeed, matching, available, selectedProgs, lookupLevel };
+      // Show "Get Live Prices" if any result ISPs have live scrapers
+      const liveCapable = available.filter(isp => ISP_LIVE_KEYS[isp.name]);
+      if (liveCapable.length > 0) {
+        document.getElementById('livePriceSection').classList.remove('hidden');
+      }
+
+      // Community resources — filter by county (always county-level regardless of block lookup)
+      const communityAvailable = COMMUNITY_RESOURCES.filter(r =>
+        !county || r.counties.includes(county)
+      );
+      let commHtml = '';
+      if (communityAvailable.length > 0) {
+        commHtml = '<h4 class="section-title blue">📚 COMMUNITY RESOURCES & HOTSPOT PROGRAMS</h4>';
+        communityAvailable.forEach(r => {
+          commHtml += `<div class="community-card">
+            <div>
+              <h4>${r.name}</h4>
+              <p class="meta">${r.type}${r.speed ? ' • ' + r.speed : ''} • ${r.phone} • ${r.url}</p>
+              <p class="elig-note">${r.elig}</p>
+            </div>
+            <span class="free-badge">${r.price}</span>
+          </div>`;
+        });
+      }
+      document.getElementById('communityResults').innerHTML = commHtml;
+
+      window.lookupData = { clientName, fullAddress, county: county || 'Unknown', household, needWork, needSchool, needStream, budget, recSpeed, matching, available, communityAvailable, selectedProgs, lookupLevel };
     });
 
     // ═══════════════════════════════════════════════════════════════════
@@ -644,6 +761,12 @@ AVAILABLE PROVIDERS (${levelNote}):
         if (isp.lowIncome) template += `   ★ Low-income: ${isp.lowIncome.prog} (${isp.lowIncome.price})\n`;
         template += `\n`;
       });
+      if (d.communityAvailable && d.communityAvailable.length > 0) {
+        template += `════════════════════════════════════════════════════════════\nCOMMUNITY RESOURCES & HOTSPOT PROGRAMS:\n════════════════════════════════════════════════════════════\n\n`;
+        d.communityAvailable.forEach(r => {
+          template += `► ${r.name} — ${r.type}\n  Price: ${r.price}${r.speed ? ' | Speed: ' + r.speed : ''}\n  Phone: ${r.phone} | ${r.url}\n  Eligibility: ${r.elig}\n\n`;
+        });
+      }
       template += `════════════════════════════════════════════════════════════
 RESOURCES: Lifeline (lifelinesupport.org) • PCs for People (pcsforpeople.org) • KC Digital Drive (kcdigitaldrive.org)
 NOTE: Confirm availability with provider. ${levelNote} data from FCC BDC.
@@ -664,6 +787,107 @@ NOTE: Confirm availability with provider. ${levelNote} data from FCC BDC.
         window.open('https://broadbandmap.fcc.gov/', '_blank');
       }
     });
+
+    // ═══════════════════════════════════════════════════════════════════
+    // LIVE PRICE LOOKUP
+    // ═══════════════════════════════════════════════════════════════════
+
+    document.getElementById('getLivePricesBtn').addEventListener('click', getLivePrices);
+
+    async function getLivePrices() {
+      const btn       = document.getElementById('getLivePricesBtn');
+      const statusDiv = document.getElementById('livePricesStatus');
+      const pillsDiv  = document.getElementById('ispPills');
+      const d = window.lookupData;
+      if (!d) return;
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Checking live prices...';
+      statusDiv.classList.remove('hidden');
+
+      // Which ISPs in these results have live scrapers?
+      const liveIsps = d.available.filter(isp => ISP_LIVE_KEYS[isp.name]);
+      const ispKeys  = liveIsps.map(isp => ISP_LIVE_KEYS[isp.name]);
+
+      // Loading pill per ISP
+      pillsDiv.innerHTML = liveIsps.map(isp =>
+        `<span class="isp-pill loading" id="pill-${ISP_LIVE_KEYS[isp.name]}">⏳ ${isp.name}</span>`
+      ).join('');
+
+      // Mark each ISP card as loading
+      liveIsps.forEach(isp => {
+        const card = document.querySelector(`[data-isp-key="${ISP_LIVE_KEYS[isp.name]}"]`);
+        const lp = card?.querySelector('.live-plans');
+        if (lp) lp.innerHTML = '<span class="live-loading">checking live prices…</span>';
+      });
+
+      try {
+        const street = document.getElementById('street').value.trim();
+        const city   = document.getElementById('city').value.trim();
+        const state  = document.getElementById('state').value;
+        const zip    = document.getElementById('zip').value.trim();
+        const params = new URLSearchParams({ address: street, city, state, zip, isps: ispKeys.join(',') });
+        if (window.geoData?.latitude)  params.set('lat', window.geoData.latitude);
+        if (window.geoData?.longitude) params.set('lon', window.geoData.longitude);
+
+        const res  = await fetch(`${PROXY_BASE}/api/live-prices?${params}`);
+        const json = await res.json();
+        if (!json.success) throw new Error(json.message || 'Live price lookup failed');
+
+        json.results.forEach(result => {
+          // Map result.isp back to the key
+          const key  = Object.entries(ISP_LIVE_KEYS).find(([name]) =>
+            name.toLowerCase() === result.isp?.toLowerCase()
+          )?.[1] || result.isp?.toLowerCase().replace(/\s+/g, '-');
+
+          const pill = document.getElementById(`pill-${key}`);
+          const card = document.querySelector(`[data-isp-key="${key}"]`);
+          const lp   = card?.querySelector('.live-plans');
+
+          if (result.status === 'available' && result.plans?.length) {
+            if (pill) { pill.textContent = `✓ ${result.isp}`; pill.className = 'isp-pill done'; }
+            if (lp) {
+              const srcLabel = result.source === 'api' ? '⚡ live API' : '⚡ live';
+              lp.innerHTML =
+                result.plans.map(p =>
+                  `<span class="live-chip${p.lowIncome ? ' li' : ''}">${p.name}: ${p.price}</span>`
+                ).join('') +
+                `<span class="live-src">${srcLabel}</span>`;
+            }
+          } else if (result.status === 'available-static' && result.plans?.length) {
+            // Static fallback — plans from aLEGEND sheet, live API unavailable
+            if (pill) { pill.textContent = `✓ ${result.isp}`; pill.className = 'isp-pill done'; }
+            if (lp) {
+              const checkLink = result.checkUrl
+                ? ` · <a href="${result.checkUrl}" target="_blank" style="color:#8892a0;text-decoration:underline">verify at att.com</a>`
+                : '';
+              lp.innerHTML =
+                result.plans.map(p =>
+                  `<span class="live-chip${p.lowIncome ? ' li' : ''}">${p.name}: ${p.price}</span>`
+                ).join('') +
+                `<span class="live-src" style="color:#8892a0">📋 standard KC rates${checkLink}</span>`;
+            }
+          } else if (result.status === 'unavailable') {
+            if (pill) { pill.textContent = `✗ ${result.isp} (not at this address)`; pill.className = 'isp-pill fail'; }
+            if (lp) lp.innerHTML = '<span class="live-src err">✗ not available at this address per provider</span>';
+          } else {
+            // error or timeout — show graceful fallback note
+            const errMsg = result.error || 'bot detection or timeout';
+            if (pill) { pill.textContent = `? ${result.isp} (${errMsg.slice(0,30)})`; pill.className = 'isp-pill fail'; }
+            if (lp) lp.innerHTML = '<span class="live-src err">could not retrieve — check provider website directly</span>';
+          }
+        });
+
+        btn.textContent = '🔄 Refresh Live Prices';
+        btn.disabled = false;
+
+      } catch (err) {
+        btn.textContent = '⚡ Get Live Prices at This Address';
+        btn.disabled = false;
+        pillsDiv.innerHTML = `<span class="isp-pill fail">❌ ${err.message}</span>`;
+        document.querySelectorAll('.live-loading').forEach(el => el.remove());
+      }
+    }
   </script>
 </body>
 </html>
