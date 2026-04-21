@@ -93,6 +93,12 @@
     .isp-cat-header { margin: 18px 0 6px; }
     .isp-cat-title { font-size: 10px; font-weight: 700; color: #8892a0; letter-spacing: 0.8px; text-transform: uppercase; display: block; margin-bottom: 4px; }
     .isp-cat-desc { font-size: 11px; color: #5c6370; line-height: 1.45; padding: 6px 10px; margin: 0 0 6px; background: rgba(255,255,255,0.02); border-left: 2px solid rgba(255,255,255,0.07); border-radius: 0 6px 6px 0; }
+    .lang-toggle { display: flex; gap: 6px; margin-left: auto; align-self: flex-start; padding-top: 2px; }
+    .lang-btn { padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); color: #8892a0; transition: all 0.15s; }
+    .lang-btn.active { background: rgba(0,212,170,0.2); border-color: rgba(0,212,170,0.4); color: #00d4aa; }
+    .local-badge { display: inline-block; background: rgba(0,212,170,0.15); border: 1px solid rgba(0,212,170,0.3); color: #00d4aa; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; margin-left: 6px; vertical-align: middle; }
+    .session-counter { font-size: 11px; color: #8892a0; margin-top: 2px; }
+    .btn-print { background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%); color: #fff; }
     .isp-pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
     .isp-pill { padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); font-size: 12px; color: #8892a0; }
     .isp-pill.loading { color: #f1c40f; border-color: rgba(241,196,15,0.3); }
@@ -114,82 +120,87 @@
   <div class="container">
     <div class="header">
       <div class="logo">📡</div>
-      <div>
+      <div style="flex:1">
         <h1>KC Digital Navigator ISP Tool</h1>
-        <p>FCC Data (March 2026) • Block-Level Lookup • Full Address Input</p>
+        <p id="tagline">FCC Data (March 2026) • Block-Level Lookup</p>
+        <p class="session-counter" id="sessionCounter"></p>
+      </div>
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="langEN" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" id="langES" onclick="setLang('es')">ES</button>
       </div>
     </div>
 
     <div class="card" id="step1">
-      <h2>Step 1: Client Address</h2>
-      <label class="field-label">Client Name (optional - for your notes)</label>
+      <h2 data-i18n="step1_title">Step 1: Client Address</h2>
+      <label class="field-label" data-i18n="name_label">Client Name (optional — for your notes)</label>
       <input type="text" id="clientName" placeholder="e.g., Maria G.">
-      <label class="field-label">Street Address *</label>
+      <label class="field-label" data-i18n="street_label">Street Address *</label>
       <input type="text" id="street" placeholder="e.g., 1234 Main St">
-      <label class="field-label">Apartment / Unit (if any)</label>
+      <label class="field-label" data-i18n="unit_label">Apartment / Unit (if any)</label>
       <input type="text" id="unit" placeholder="e.g., Apt 2B">
       <div class="row-3">
         <div>
-          <label class="field-label">City *</label>
+          <label class="field-label" data-i18n="city_label">City *</label>
           <input type="text" id="city" placeholder="e.g., Kansas City">
         </div>
         <div>
-          <label class="field-label">State *</label>
+          <label class="field-label" data-i18n="state_label">State *</label>
           <select id="state">
             <option value="MO" selected>MO</option>
             <option value="KS">KS</option>
           </select>
         </div>
         <div>
-          <label class="field-label">ZIP Code *</label>
+          <label class="field-label" data-i18n="zip_label">ZIP Code *</label>
           <input type="text" id="zip" placeholder="e.g., 64108" maxlength="5">
         </div>
       </div>
-      <label class="field-label">Household Size</label>
+      <label class="field-label" data-i18n="household_label">Household Size</label>
       <select id="household">
         <option value="1">1 person</option>
         <option value="2">2 people</option>
         <option value="3" selected>3-4 people</option>
         <option value="5">5+ people</option>
       </select>
-      <label class="field-label">Internet Needs (check all that apply)</label>
+      <label class="field-label" data-i18n="needs_label">Internet Needs (check all that apply)</label>
       <div class="checkbox-grid">
         <label class="checkbox-item" id="needWorkLabel">
-          <input type="checkbox" id="needWork"> Work from home / video calls
+          <input type="checkbox" id="needWork"> <span data-i18n="need_work">Work from home / video calls</span>
         </label>
         <label class="checkbox-item" id="needSchoolLabel">
-          <input type="checkbox" id="needSchool"> Students / online school
+          <input type="checkbox" id="needSchool"> <span data-i18n="need_school">Students / online school</span>
         </label>
         <label class="checkbox-item" id="needStreamLabel">
-          <input type="checkbox" id="needStream"> Streaming / gaming
+          <input type="checkbox" id="needStream"> <span data-i18n="need_stream">Streaming / gaming</span>
         </label>
       </div>
-      <label class="field-label">Monthly Budget for Internet</label>
+      <label class="field-label" data-i18n="budget_label">Monthly Budget for Internet</label>
       <select id="budget">
         <option value="$0-15">$0-15/month (need assistance program)</option>
         <option value="$15-30">$15-30/month</option>
         <option value="$30-50" selected>$30-50/month</option>
         <option value="$50+">$50+/month</option>
       </select>
-      <button class="btn-primary" id="toStep2">Next: Eligibility Screening →</button>
+      <button class="btn-primary" id="toStep2" data-i18n="btn_next">Next: Eligibility Screening →</button>
     </div>
 
     <div class="card hidden" id="step2">
-      <h3>Step 2: Eligibility Screening</h3>
-      <p style="color: #8892a0; font-size: 14px; margin-bottom: 20px;">Does the client participate in any of these programs? This helps find discounted internet.</p>
+      <h3 data-i18n="step2_title">Step 2: Eligibility Screening</h3>
+      <p data-i18n="step2_desc" style="color: #8892a0; font-size: 14px; margin-bottom: 20px;">Does the client participate in any of these programs? This helps find discounted internet.</p>
       <div class="prog-list" id="progList">
-        <label class="checkbox-item" data-prog="snap"><input type="checkbox"> SNAP (food stamps)</label>
-        <label class="checkbox-item" data-prog="medicaid"><input type="checkbox"> Medicaid</label>
-        <label class="checkbox-item" data-prog="ssi"><input type="checkbox"> SSI (Supplemental Security Income)</label>
-        <label class="checkbox-item" data-prog="lunch"><input type="checkbox"> Free/reduced school lunch</label>
-        <label class="checkbox-item" data-prog="housing"><input type="checkbox"> Federal Public Housing</label>
-        <label class="checkbox-item" data-prog="veterans"><input type="checkbox"> Veterans Pension</label>
-        <label class="checkbox-item" data-prog="lifeline"><input type="checkbox"> Lifeline (phone discount)</label>
-        <label class="checkbox-item" data-prog="none"><input type="checkbox"> None of the above</label>
+        <label class="checkbox-item" data-prog="snap"><input type="checkbox"> <span data-i18n="prog_snap">SNAP (food stamps)</span></label>
+        <label class="checkbox-item" data-prog="medicaid"><input type="checkbox"> <span data-i18n="prog_medicaid">Medicaid</span></label>
+        <label class="checkbox-item" data-prog="ssi"><input type="checkbox"> <span data-i18n="prog_ssi">SSI (Supplemental Security Income)</span></label>
+        <label class="checkbox-item" data-prog="lunch"><input type="checkbox"> <span data-i18n="prog_lunch">Free/reduced school lunch</span></label>
+        <label class="checkbox-item" data-prog="housing"><input type="checkbox"> <span data-i18n="prog_housing">Federal Public Housing</span></label>
+        <label class="checkbox-item" data-prog="veterans"><input type="checkbox"> <span data-i18n="prog_veterans">Veterans Pension</span></label>
+        <label class="checkbox-item" data-prog="lifeline"><input type="checkbox"> <span data-i18n="prog_lifeline">Lifeline (phone discount)</span></label>
+        <label class="checkbox-item" data-prog="none"><input type="checkbox"> <span data-i18n="prog_none">None of the above</span></label>
       </div>
       <div class="btn-row">
-        <button class="btn-secondary" id="backTo1">← Back</button>
-        <button class="btn-primary" id="findISPs">🔍 Find Internet Options</button>
+        <button class="btn-secondary" id="backTo1" data-i18n="btn_back">← Back</button>
+        <button class="btn-primary" id="findISPs" data-i18n="btn_find">🔍 Find Internet Options</button>
       </div>
     </div>
 
@@ -233,11 +244,12 @@
           </div>
         </div>
       </div>
-      <div class="btn-row" style="margin-top: 20px;">
-        <button class="btn-secondary" id="startOver">🔄 Start New Lookup</button>
-        <button class="btn-fcc" id="checkFCC">🌐 Verify on FCC Website</button>
+      <button class="btn-print" id="printForClient" style="width:100%;margin-bottom:10px;margin-top:20px;" data-i18n="btn_print">🖨 Print for Client</button>
+      <div class="btn-row">
+        <button class="btn-secondary" id="startOver" data-i18n="btn_start_over">🔄 Start New Lookup</button>
+        <button class="btn-fcc" id="checkFCC" data-i18n="btn_fcc">🌐 Verify on FCC Website</button>
       </div>
-      <p style="font-size: 11px; color: #6b7280; margin-top: 10px; text-align: center;">FCC website shows exact address-level availability — use for verification</p>
+      <p data-i18n="fcc_note" style="font-size: 11px; color: #6b7280; margin-top: 10px; text-align: center;">FCC website shows exact address-level availability — use for verification</p>
     </div>
 
     <div class="footer">
@@ -247,6 +259,137 @@
   </div>
 
   <script>
+    // ═══════════════════════════════════════════════════════════════════
+    // LANGUAGE SYSTEM
+    // ═══════════════════════════════════════════════════════════════════
+    let currentLang = 'en';
+    const TRANS = {
+      en: {
+        tagline: 'FCC Data (March 2026) • Block-Level Lookup',
+        today_lookups: n => `Today: ${n} lookup${n===1?'':'s'}`,
+        step1_title: 'Step 1: Client Address',
+        name_label: 'Client Name (optional — for your notes)',
+        street_label: 'Street Address *',
+        unit_label: 'Apartment / Unit (if any)',
+        city_label: 'City *', state_label: 'State *', zip_label: 'ZIP Code *',
+        household_label: 'Household Size',
+        needs_label: 'Internet Needs (check all that apply)',
+        need_work: 'Work from home / video calls',
+        need_school: 'Students / online school',
+        need_stream: 'Streaming / gaming',
+        budget_label: 'Monthly Budget for Internet',
+        btn_next: 'Next: Eligibility Screening →',
+        step2_title: 'Step 2: Eligibility Screening',
+        step2_desc: 'Does the client participate in any of these programs? This helps find discounted internet.',
+        prog_snap: 'SNAP (food stamps)', prog_medicaid: 'Medicaid',
+        prog_ssi: 'SSI (Supplemental Security Income)',
+        prog_lunch: 'Free/reduced school lunch',
+        prog_housing: 'Federal Public Housing', prog_veterans: 'Veterans Pension',
+        prog_lifeline: 'Lifeline (phone discount)', prog_none: 'None of the above',
+        btn_back: '← Back', btn_find: '🔍 Find Internet Options',
+        btn_start_over: '🔄 Start New Lookup', btn_fcc: '🌐 Verify on FCC Website',
+        btn_print: '🖨 Print for Client',
+        fcc_note: 'FCC website shows exact address-level availability — use for verification',
+        sec_recommended: '★ RECOMMENDED LOW-INCOME PROGRAMS',
+        sec_all: 'ALL AVAILABLE PROVIDERS',
+        sec_community: '📚 COMMUNITY RESOURCES & HOTSPOT PROGRAMS',
+        local_badge: '⭐ Local KC', visit_website: 'Visit website →',
+        eligibility: 'Eligibility:', qualifies: 'Qualifies:',
+        live_std_rates: '📋 standard KC rates', live_unavailable: 'live pricing unavailable',
+        cat_fiber_title: '🔌 FIBER & CABLE',
+        cat_fiber_desc: 'Wired internet — most reliable for home use. A technician installs a line into your wall. Very fast and stays strong even when many people in the house are online at the same time for work or school.',
+        cat_wireless_title: '📱 WIRELESS / PHONE',
+        cat_wireless_desc: "Works like a cell phone for your house. Plug a small box into a power outlet near a window — no drilling required. Very easy to set up yourself and a great option for renters who move often.",
+        cat_satellite_title: '🛰 RURAL / SATELLITE',
+        cat_satellite_desc: "For areas where wires and cell towers don't reach. Uses a dish on your roof. Often more expensive, but may be the only choice if you live far from the city.",
+        rec_speed: 'Recommended Speed:', qualifies_for: 'Qualifies for:',
+        print_title: 'Internet Options for Your Address',
+        print_footer: 'Generated by KC Digital Navigator • Data: FCC Broadband Map March 2026',
+        print_verify: 'Verify availability:',
+        add_resources: '📚 Additional Resources',
+      },
+      es: {
+        tagline: 'Datos FCC (Marzo 2026) • Búsqueda por Bloque',
+        today_lookups: n => `Hoy: ${n} búsqueda${n===1?'':'s'}`,
+        step1_title: 'Paso 1: Dirección del Cliente',
+        name_label: 'Nombre del cliente (opcional — para sus notas)',
+        street_label: 'Dirección *',
+        unit_label: 'Apartamento / Unidad (si aplica)',
+        city_label: 'Ciudad *', state_label: 'Estado *', zip_label: 'Código Postal *',
+        household_label: 'Tamaño del hogar',
+        needs_label: 'Necesidades de internet (marque todo lo que aplique)',
+        need_work: 'Trabajo desde casa / videollamadas',
+        need_school: 'Estudiantes / escuela en línea',
+        need_stream: 'Videos en línea / juegos',
+        budget_label: 'Presupuesto mensual para internet',
+        btn_next: 'Siguiente: Verificar Elegibilidad →',
+        step2_title: 'Paso 2: Verificar Elegibilidad',
+        step2_desc: '¿El cliente participa en alguno de estos programas? Esto ayuda a encontrar internet con descuento.',
+        prog_snap: 'SNAP (cupones de comida)', prog_medicaid: 'Medicaid',
+        prog_ssi: 'SSI (Ingreso de Seguridad Suplementario)',
+        prog_lunch: 'Almuerzo escolar gratis/reducido',
+        prog_housing: 'Vivienda Pública Federal', prog_veterans: 'Pensión para Veteranos',
+        prog_lifeline: 'Lifeline (descuento de teléfono)', prog_none: 'Ninguno de los anteriores',
+        btn_back: '← Regresar', btn_find: '🔍 Buscar Opciones de Internet',
+        btn_start_over: '🔄 Nueva Búsqueda', btn_fcc: '🌐 Verificar en el Sitio FCC',
+        btn_print: '🖨 Imprimir para el Cliente',
+        fcc_note: 'El sitio de la FCC muestra disponibilidad exacta por dirección — use para verificación',
+        sec_recommended: '★ PROGRAMAS RECOMENDADOS DE BAJOS INGRESOS',
+        sec_all: 'TODOS LOS PROVEEDORES DISPONIBLES',
+        sec_community: '📚 RECURSOS COMUNITARIOS Y PROGRAMAS DE HOTSPOT',
+        local_badge: '⭐ Empresa KC Local', visit_website: 'Visitar sitio →',
+        eligibility: 'Elegibilidad:', qualifies: 'Califica:',
+        live_std_rates: '📋 tarifas estándar KC', live_unavailable: 'precios en vivo no disponibles',
+        cat_fiber_title: '🔌 FIBRA Y CABLE',
+        cat_fiber_desc: 'Internet con cable — la opción más confiable para el hogar. Un técnico instala un cable en su pared. Muy rápido y estable aunque muchas personas estén conectadas al mismo tiempo para trabajar o estudiar.',
+        cat_wireless_title: '📱 INALÁMBRICO / TELÉFONO',
+        cat_wireless_desc: 'Funciona como un teléfono celular para su hogar. Conecte una pequeña caja a un tomacorriente cerca de una ventana — sin perforaciones. Muy fácil de instalar y excelente opción para inquilinos que se mudan con frecuencia.',
+        cat_satellite_title: '🛰 RURAL / SATÉLITE',
+        cat_satellite_desc: 'Para áreas donde no llegan cables ni torres celulares. Usa un plato en su techo para comunicarse con satélites. A veces más costoso, pero puede ser la única opción si vive lejos de la ciudad.',
+        rec_speed: 'Velocidad Recomendada:', qualifies_for: 'Califica para:',
+        print_title: 'Opciones de Internet para su Dirección',
+        print_footer: 'Generado por KC Digital Navigator • Datos: FCC Broadband Map Marzo 2026',
+        print_verify: 'Verifique disponibilidad:',
+        add_resources: '📚 Recursos Adicionales',
+      }
+    };
+    const t = key => (TRANS[currentLang]?.[key] ?? TRANS.en[key]) ?? key;
+    function setLang(lang) {
+      currentLang = lang;
+      document.getElementById('langEN').classList.toggle('active', lang==='en');
+      document.getElementById('langES').classList.toggle('active', lang==='es');
+      document.getElementById('tagline').textContent = t('tagline');
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const k = el.getAttribute('data-i18n');
+        if (typeof TRANS[lang]?.[k] === 'string') el.textContent = TRANS[lang][k];
+      });
+      updateSessionCounter();
+      // Re-render results if visible
+      if (window.lookupData && !document.getElementById('step3').classList.contains('hidden')) {
+        renderISPResults(window.lookupData);
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // SESSION COUNTER
+    // ═══════════════════════════════════════════════════════════════════
+    function getSessionLog() {
+      try { return JSON.parse(localStorage.getItem('kc-nav-sessions') || '[]'); } catch(e) { return []; }
+    }
+    function logSession(data) {
+      const log = getSessionLog();
+      log.push({ ts: Date.now(), address: data.fullAddress, county: data.county, ispCount: data.available?.length || 0, programs: data.matching?.map(m=>m.lowIncome?.prog).filter(Boolean) || [] });
+      localStorage.setItem('kc-nav-sessions', JSON.stringify(log.slice(-200)));
+      updateSessionCounter();
+    }
+    function updateSessionCounter() {
+      const today = new Date().toDateString();
+      const count = getSessionLog().filter(s => new Date(s.ts).toDateString() === today).length;
+      const el = document.getElementById('sessionCounter');
+      if (el) el.textContent = count > 0 ? t('today_lookups')(count) : '';
+    }
+    updateSessionCounter();
+
     // ═══════════════════════════════════════════════════════════════════
     // BLOCK-LEVEL ISP LOOKUP - v2.0
     // ═══════════════════════════════════════════════════════════════════
@@ -377,13 +520,13 @@
     // ═══════════════════════════════════════════════════════════════════
     const ISP_DATA = [
       // ── FIBER & CABLE ─────────────────────────────────────────────────────────
-      {name:"AT&T",tech:"DSL/Fiber",speed:5000,category:"fiber-cable",url:"att.com/access",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-800-288-2020",lowIncome:{prog:"AT&T Access",price:"$10/mo",spd:"100 Mbps",elig:"SNAP, SSI, Medicaid, free lunch",matches:["snap","ssi","medicaid","lunch"]}},
+      {name:"AT&T",tech:"DSL/Fiber",speed:5000,category:"fiber-cable",url:"att.com/access",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-800-288-2020",lowIncome:{prog:"AT&T Access",price:"$30/mo",spd:"100 Mbps",elig:"SNAP, SSI, Medicaid, free lunch",matches:["snap","ssi","medicaid","lunch"]}},
       {name:"Spectrum",tech:"Cable/Fiber",speed:1000,category:"fiber-cable",url:"spectrum.com/assist",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-833-267-6094",lowIncome:{prog:"Spectrum Internet Assist",price:"$17.99/mo",spd:"30 Mbps",elig:"SSI, free lunch, Medicaid",matches:["ssi","lunch","medicaid"]}},
       {name:"Xfinity",tech:"Cable/Fiber",speed:10000,category:"fiber-cable",url:"xfinity.com/buy/internet",counties:["Jackson, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-800-934-6489",lowIncome:{prog:"Internet Essentials",price:"$9.95/mo",spd:"50 Mbps",elig:"SNAP, Medicaid, housing, SSI",matches:["snap","medicaid","housing","ssi"]}},
       {name:"Google Fiber",tech:"Fiber",speed:1000,category:"fiber-cable",url:"fiber.google.com",counties:[],phone:"(866) 777-7550",lowIncome:null},
       {name:"Optimum",tech:"Fiber/Cable",speed:300,category:"fiber-cable",url:"optimum.com",counties:["Miami, KS"],phone:"(877) 694-9474",lowIncome:null},
       {name:"Brightspeed",tech:"DSL/Fiber",speed:2000,category:"fiber-cable",url:"brightspeed.com/check-availability",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-833-692-7773",lowIncome:null},
-      {name:"Everfast Fiber",tech:"Fiber",speed:1000,category:"fiber-cable",url:"everfastfiber.com",counties:["Jackson, MO","Johnson, KS","Wyandotte, KS"],phone:"(913) 825-3000",lowIncome:null},
+      {name:"Everfast Fiber",tech:"Fiber",speed:1000,category:"fiber-cable",url:"everfastfiber.com",counties:["Jackson, MO","Johnson, KS","Wyandotte, KS"],phone:"(913) 825-3000",lowIncome:null,local:true},
       {name:"Mediacom Xtream",tech:"Cable",speed:1000,category:"fiber-cable",url:"mediacomcable.com",counties:["Cass, MO","Clay, MO","Johnson, KS"],phone:"1-855-633-4226",lowIncome:null},
       {name:"Cox Communications",tech:"Fiber",speed:2000,category:"fiber-cable",url:"cox.com/residential/internet.html",counties:["Johnson, KS"],phone:"1-800-234-3993",lowIncome:null},
       {name:"Midco",tech:"Cable/Fiber",speed:5000,category:"fiber-cable",url:"midco.com/internet",counties:["Wyandotte, KS","Leavenworth, KS"],phone:null,lowIncome:null},
@@ -509,7 +652,7 @@
 
       const geoResult = await geocodeAddress(street, city, state, zip);
 
-      btn.textContent = 'Next: Eligibility Screening →';
+      btn.textContent = t('btn_next');
       btn.disabled = false;
 
       if (!geoResult.success) {
@@ -574,6 +717,8 @@
         'Xfinity':   ['comcast'],
         'Spectrum':  ['charter communications', 'charter'],
         'Brightspeed': ['lumen', 'centurylink'],
+        'Mercury Broadband': ['mercury fiber', 'mercury communications', 'mercury broadband inc'],
+        'Google Fiber': ['google fiber', 'alphabet'],
       };
 
       let blockMatchedIsps = null;
@@ -630,100 +775,223 @@
       document.getElementById('step2').classList.add('hidden');
       document.getElementById('step3').classList.remove('hidden');
 
-      document.getElementById('resultsTitle').textContent = `Results (${available.length} providers)`;
+      // Community resources — filter by county (always county-level regardless of block lookup)
+      const communityAvailable = COMMUNITY_RESOURCES.filter(r =>
+        !county || r.counties.includes(county)
+      );
+
+      window.lookupData = { clientName, fullAddress, county: county || 'Unknown', household, needWork, needSchool, needStream, budget, recSpeed, matching, available, communityAvailable, selectedProgs, lookupLevel, warning };
+      logSession(window.lookupData);
+      renderISPResults(window.lookupData);
+    });
+
+    // ═══════════════════════════════════════════════════════════════════
+    // RENDER ISP RESULTS — extracted for re-render on language change
+    // ═══════════════════════════════════════════════════════════════════
+    function renderIspCard(isp, selectedProgs) {
+      const qualifies = isp.lowIncome?.matches?.some(m => selectedProgs.includes(m));
+      const liveKey = ISP_LIVE_KEYS[isp.name] || null;
+      return `<div class="isp-card"${liveKey ? ` data-isp-key="${liveKey}"` : ''}>
+        <div>
+          <h4>${isp.name}${isp.local ? `<span class="local-badge">${t('local_badge')}</span>` : ''}</h4>
+          <p class="meta">${isp.tech} • Up to ${isp.speed} Mbps${isp.phone ? ` • <a href="tel:${isp.phone}" style="color:inherit;text-decoration:none">${isp.phone}</a>` : ''}${isp.url ? ` • <a href="https://${isp.url}" target="_blank" style="color:#3498db;text-decoration:none">${t('visit_website')}</a>` : ''}</p>
+          ${liveKey ? `<div class="live-plans"></div>` : ''}
+        </div>
+        ${qualifies ? `<span class="badge">${t('qualifies')} ${isp.lowIncome.price}</span>` : ''}
+      </div>`;
+    }
+
+    const ISP_CATEGORIES = [
+      { key:'fiber-cable',    title: ()=>t('cat_fiber_title'),    desc: ()=>t('cat_fiber_desc') },
+      { key:'wireless',       title: ()=>t('cat_wireless_title'), desc: ()=>t('cat_wireless_desc') },
+      { key:'rural-satellite',title: ()=>t('cat_satellite_title'),desc: ()=>t('cat_satellite_desc') },
+    ];
+
+    function renderISPResults(d) {
+      document.getElementById('resultsTitle').textContent = `Results (${d.available.length} providers)`;
 
       // Address display with block/county badge
-      const levelBadge = lookupLevel === 'block'
+      const levelBadge = d.lookupLevel === 'block'
         ? '<span class="block-badge">📍 Block-level results</span>'
-        : '<span class="county-badge">' + (county || 'KC Area') + '</span>';
+        : '<span class="county-badge">' + (d.county !== 'Unknown' ? d.county : 'KC Area') + '</span>';
       document.getElementById('addressDisplay').innerHTML =
-        `<strong>Address:</strong> ${window.geoData?.matchedAddress || fullAddress}${levelBadge}`;
+        `<strong>Address:</strong> ${window.geoData?.matchedAddress || d.fullAddress}${levelBadge}`;
 
-      document.getElementById('warningBox').innerHTML = warning ? `<div class="warning-box">${warning}</div>` : '';
+      document.getElementById('warningBox').innerHTML = d.warning ? `<div class="warning-box">${d.warning}</div>` : '';
 
-      let speedHtml = `<strong>Recommended Speed:</strong> ${recSpeed}+ Mbps`;
-      if (matching.length > 0) {
-        speedHtml += ` &nbsp;•&nbsp; <strong>Qualifies for:</strong> ${matching.map(m => m.lowIncome.prog).join(', ')}`;
+      let speedHtml = `<strong>${t('rec_speed')}</strong> ${d.recSpeed}+ Mbps`;
+      if (d.matching.length > 0) {
+        speedHtml += ` &nbsp;•&nbsp; <strong>${t('qualifies_for')}</strong> ${d.matching.map(m => m.lowIncome.prog).join(', ')}`;
       }
       document.getElementById('speedRec').innerHTML = speedHtml;
 
       let lowHtml = '';
-      if (matching.length > 0) {
-        lowHtml = '<h4 class="section-title">★ RECOMMENDED LOW-INCOME PROGRAMS</h4>';
-        matching.forEach(isp => {
+      if (d.matching.length > 0) {
+        lowHtml = `<h4 class="section-title">${t('sec_recommended')}</h4>`;
+        d.matching.forEach(isp => {
           lowHtml += `<div class="low-income-card">
             <div class="row">
-              <div><h4>${isp.name} — ${isp.lowIncome.prog}</h4><p class="phone">${isp.phone ? `<a href="tel:${isp.phone}" style="color:inherit;text-decoration:none">${isp.phone}</a>` : ''}${isp.url ? `${isp.phone ? ' · ' : ''}<a href="https://${isp.url}" target="_blank" style="color:#3498db;text-decoration:none">Visit website →</a>` : ''}</p></div>
+              <div><h4>${isp.name} — ${isp.lowIncome.prog}</h4><p class="phone">${isp.phone ? `<a href="tel:${isp.phone}" style="color:inherit;text-decoration:none">${isp.phone}</a>` : ''}${isp.url ? `${isp.phone ? ' · ' : ''}<a href="https://${isp.url}" target="_blank" style="color:#3498db;text-decoration:none">${t('visit_website')}</a>` : ''}</p></div>
               <div style="text-align:right;"><div class="price">${isp.lowIncome.price}</div><div class="speed">${isp.lowIncome.spd}</div></div>
             </div>
-            <div class="elig"><strong>Eligibility:</strong> ${isp.lowIncome.elig}</div>
+            <div class="elig"><strong>${t('eligibility')}</strong> ${isp.lowIncome.elig}</div>
           </div>`;
         });
       }
       document.getElementById('lowIncomeResults').innerHTML = lowHtml;
 
-      const ISP_CATEGORIES = [
-        { key:'fiber-cable',    icon:'🔌', title:'FIBER & CABLE',
-          desc:'Wired internet — most reliable for home use. A technician installs a line into your wall. Very fast and stays strong even when many people in the house are online at the same time for work or school.' },
-        { key:'wireless',       icon:'📱', title:'WIRELESS / PHONE',
-          desc:'Works like a cell phone for your house. Plug a small box into a power outlet near a window — no drilling required. Very easy to set up yourself and a great option for renters who move often.' },
-        { key:'rural-satellite',icon:'🛰', title:'RURAL / SATELLITE',
-          desc:'For areas where wires and cell towers don\'t reach. Uses a dish on your roof. Often more expensive, but may be the only choice if you live far from the city.' },
-      ];
-
-      function renderIspCard(isp, selectedProgs) {
-        const qualifies = isp.lowIncome?.matches?.some(m => selectedProgs.includes(m));
-        const liveKey = ISP_LIVE_KEYS[isp.name] || null;
-        return `<div class="isp-card"${liveKey ? ` data-isp-key="${liveKey}"` : ''}>
-          <div>
-            <h4>${isp.name}</h4>
-            <p class="meta">${isp.tech} • Up to ${isp.speed} Mbps${isp.phone ? ` • <a href="tel:${isp.phone}" style="color:inherit;text-decoration:none">${isp.phone}</a>` : ''}${isp.url ? ` • <a href="https://${isp.url}" target="_blank" style="color:#3498db;text-decoration:none">Visit website →</a>` : ''}</p>
-            ${liveKey ? `<div class="live-plans"></div>` : ''}
-          </div>
-          ${qualifies ? `<span class="badge">Qualifies: ${isp.lowIncome.price}</span>` : ''}
-        </div>`;
-      }
-
-      let allHtml = '<h4 class="section-title gray">ALL AVAILABLE PROVIDERS</h4>';
+      let allHtml = `<h4 class="section-title gray">${t('sec_all')}</h4>`;
       ISP_CATEGORIES.forEach(cat => {
-        const catIsps = available.filter(isp => isp.category === cat.key);
+        const catIsps = d.available.filter(isp => isp.category === cat.key);
         if (catIsps.length === 0) return;
-        allHtml += `<div class="isp-cat-header"><span class="isp-cat-title">${cat.icon} ${cat.title}</span><p class="isp-cat-desc">${cat.desc}</p></div>`;
-        catIsps.forEach(isp => { allHtml += renderIspCard(isp, selectedProgs); });
+        allHtml += `<div class="isp-cat-header"><span class="isp-cat-title">${cat.title()}</span><p class="isp-cat-desc">${cat.desc()}</p></div>`;
+        catIsps.forEach(isp => { allHtml += renderIspCard(isp, d.selectedProgs); });
       });
       // fallback: any ISP without a category
-      const uncategorized = available.filter(isp => !isp.category);
-      uncategorized.forEach(isp => { allHtml += renderIspCard(isp, selectedProgs); });
+      const uncategorized = d.available.filter(isp => !isp.category);
+      uncategorized.forEach(isp => { allHtml += renderIspCard(isp, d.selectedProgs); });
       document.getElementById('allResults').innerHTML = allHtml;
 
       // Show "Get Live Prices" if any result ISPs have live scrapers
-      const liveCapable = available.filter(isp => ISP_LIVE_KEYS[isp.name]);
+      const liveCapable = d.available.filter(isp => ISP_LIVE_KEYS[isp.name]);
       if (liveCapable.length > 0) {
         document.getElementById('livePriceSection').classList.remove('hidden');
       }
 
-      // Community resources — filter by county (always county-level regardless of block lookup)
-      const communityAvailable = COMMUNITY_RESOURCES.filter(r =>
-        !county || r.counties.includes(county)
-      );
       let commHtml = '';
-      if (communityAvailable.length > 0) {
-        commHtml = '<h4 class="section-title blue">📚 COMMUNITY RESOURCES & HOTSPOT PROGRAMS</h4>';
-        communityAvailable.forEach(r => {
+      if (d.communityAvailable.length > 0) {
+        commHtml = `<h4 class="section-title blue">${t('sec_community')}</h4>`;
+        d.communityAvailable.forEach(r => {
           commHtml += `<div class="community-card">
             <div>
               <h4>${r.name}</h4>
               <p class="meta">${r.type}${r.speed ? ' • ' + r.speed + ' Mbps' : ''}${r.phone && r.phone !== 'Check website' ? ` • <a href="tel:${r.phone}" style="color:inherit;text-decoration:none">${r.phone}</a>` : ''} • <a href="https://${r.url}" target="_blank" style="color:#3498db;text-decoration:none">${r.url}</a></p>
-              <p class="elig-note">${r.elig}</p>
+              <p class="elig-note">${t('eligibility')} ${r.elig}</p>
             </div>
             <span class="free-badge">${r.price}</span>
           </div>`;
         });
       }
       document.getElementById('communityResults').innerHTML = commHtml;
+    }
 
-      window.lookupData = { clientName, fullAddress, county: county || 'Unknown', household, needWork, needSchool, needStream, budget, recSpeed, matching, available, communityAvailable, selectedProgs, lookupLevel };
-    });
+    // ═══════════════════════════════════════════════════════════════════
+    // PRINT FOR CLIENT
+    // ═══════════════════════════════════════════════════════════════════
+    function printForClient() {
+      const d = window.lookupData;
+      const geo = window.geoData;
+      if (!d) return;
+
+      const fccUrl = geo?.fccUrl || 'https://broadbandmap.fcc.gov/';
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(fccUrl)}`;
+
+      let body = '';
+
+      // Low-income programs
+      if (d.matching?.length) {
+        body += `<div class="section programs">
+          <h2>⭐ ${t('sec_recommended')}</h2>`;
+        d.matching.forEach(isp => {
+          body += `<div class="prog-card">
+            <div class="prog-name">${isp.name} — ${isp.lowIncome.prog}</div>
+            <div class="prog-price">${isp.lowIncome.price}</div>
+            <div class="prog-speed">${isp.lowIncome.spd}</div>
+            <div class="prog-elig">${t('eligibility')} ${isp.lowIncome.elig}</div>
+            <div class="prog-contact">${isp.phone ? isp.phone : ''} ${isp.url ? '• ' + isp.url : ''}</div>
+          </div>`;
+        });
+        body += '</div>';
+      }
+
+      // All ISPs by category
+      const cats = [
+        { key:'fiber-cable',    title: t('cat_fiber_title') },
+        { key:'wireless',       title: t('cat_wireless_title') },
+        { key:'rural-satellite',title: t('cat_satellite_title') },
+      ];
+      cats.forEach(cat => {
+        const isps = d.available?.filter(isp => isp.category === cat.key) || [];
+        if (!isps.length) return;
+        body += `<div class="section"><h2>${cat.title}</h2>`;
+        isps.forEach(isp => {
+          body += `<div class="isp-row">
+            <span class="isp-name">${isp.name}${isp.local ? ' ⭐' : ''}</span>
+            <span class="isp-tech">${isp.tech}</span>
+            <span class="isp-phone">${isp.phone || ''}</span>
+            <span class="isp-url">${isp.url || ''}</span>
+          </div>`;
+        });
+        body += '</div>';
+      });
+
+      // Community resources
+      if (d.communityAvailable?.length) {
+        body += `<div class="section"><h2>${t('sec_community')}</h2>`;
+        d.communityAvailable.forEach(r => {
+          body += `<div class="isp-row">
+            <span class="isp-name">${r.name}</span>
+            <span class="isp-tech">${r.type} — ${r.price}</span>
+            <span class="isp-phone">${r.phone !== 'Check website' ? (r.phone||'') : ''}</span>
+            <span class="isp-url">${r.url||''}</span>
+          </div>`;
+        });
+        body += '</div>';
+      }
+
+      const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+      <title>${t('print_title')}</title>
+      <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; color: #111; margin: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #00a884; padding-bottom: 10px; margin-bottom: 16px; }
+        .header h1 { font-size: 16px; margin: 0 0 4px; color: #00a884; }
+        .header .address { font-size: 13px; font-weight: bold; }
+        .header .date { font-size: 10px; color: #666; }
+        .section { margin-bottom: 16px; }
+        .section h2 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #444; border-bottom: 1px solid #ddd; padding-bottom: 3px; margin: 0 0 8px; }
+        .prog-card { background: #fff8e1; border: 1px solid #ffc107; border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; }
+        .prog-name { font-weight: 700; font-size: 13px; }
+        .prog-price { font-size: 18px; font-weight: 700; color: #00a884; display: inline-block; margin: 2px 8px 2px 0; }
+        .prog-speed { display: inline-block; color: #555; }
+        .prog-elig { font-size: 11px; color: #666; margin-top: 3px; }
+        .prog-contact { font-size: 11px; color: #333; margin-top: 2px; }
+        .isp-row { display: grid; grid-template-columns: 2fr 1.2fr 1.2fr 1.5fr; gap: 6px; padding: 4px 0; border-bottom: 1px solid #f0f0f0; align-items: center; font-size: 11px; }
+        .isp-name { font-weight: 600; }
+        .isp-tech { color: #555; }
+        .isp-phone { color: #333; }
+        .isp-url { color: #0070c0; }
+        .footer { margin-top: 20px; padding-top: 8px; border-top: 1px solid #ddd; display: flex; justify-content: space-between; align-items: flex-end; }
+        .footer-text { font-size: 10px; color: #888; }
+        .qr-section { text-align: center; }
+        .qr-section p { font-size: 9px; color: #888; margin: 2px 0 0; }
+        @media print { body { margin: 10px; } }
+      </style>
+      </head><body>
+      <div class="header">
+        <div>
+          <h1>${t('print_title')}</h1>
+          <div class="address">${geo?.matchedAddress || d.fullAddress || ''}</div>
+          <div class="date">${new Date().toLocaleDateString()} • ${d.county}</div>
+        </div>
+        <div class="qr-section">
+          <img src="${qrUrl}" width="80" height="80" alt="QR">
+          <p>${t('print_verify')}</p>
+          <p>FCC Broadband Map</p>
+        </div>
+      </div>
+      ${body}
+      <div class="footer">
+        <div class="footer-text">${t('print_footer')}</div>
+      </div>
+      </body></html>`;
+
+      const w = window.open('', '_blank');
+      w.document.write(html);
+      w.document.close();
+      setTimeout(() => w.print(), 500);
+    }
+
+    document.getElementById('printForClient').addEventListener('click', printForClient);
 
     // ═══════════════════════════════════════════════════════════════════
     // COPY BUTTONS
@@ -924,7 +1192,7 @@ NOTE: Confirm availability with provider. ${levelNote} data from FCC BDC.
                 result.plans.map(p =>
                   `<span class="live-chip${p.lowIncome ? ' li' : ''}">${p.name}: ${p.price}</span>`
                 ).join('') +
-                `<span class="live-src" style="color:#8892a0">📋 standard KC rates${checkLink}</span>`;
+                `<span class="live-src" style="color:#8892a0">${t('live_std_rates')}${checkLink}</span>`;
             }
           } else if (result.status === 'unavailable') {
             if (pill) { pill.textContent = `✗ ${result.isp} (not at this address)`; pill.className = 'isp-pill fail'; }
@@ -938,7 +1206,7 @@ NOTE: Confirm availability with provider. ${levelNote} data from FCC BDC.
               const webLink = matchedIsp?.url
                 ? ` · <a href="https://${matchedIsp.url}" target="_blank" style="color:#e57373;text-decoration:underline">visit website →</a>`
                 : '';
-              lp.innerHTML = `<span class="live-src err">live pricing unavailable${webLink}</span>`;
+              lp.innerHTML = `<span class="live-src err">${t('live_unavailable')}${webLink}</span>`;
             }
           }
         });
