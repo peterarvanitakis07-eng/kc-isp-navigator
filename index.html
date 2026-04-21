@@ -90,6 +90,9 @@
     .live-src { font-size: 10px; font-weight: 600; color: #00d4aa; margin-left: 4px; }
     .live-src.err { color: #e57373; }
     .live-loading { font-size: 11px; color: #8892a0; font-style: italic; }
+    .isp-cat-header { margin: 18px 0 6px; }
+    .isp-cat-title { font-size: 10px; font-weight: 700; color: #8892a0; letter-spacing: 0.8px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+    .isp-cat-desc { font-size: 11px; color: #5c6370; line-height: 1.45; padding: 6px 10px; margin: 0 0 6px; background: rgba(255,255,255,0.02); border-left: 2px solid rgba(255,255,255,0.07); border-radius: 0 6px 6px 0; }
     .isp-pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
     .isp-pill { padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); font-size: 12px; color: #8892a0; }
     .isp-pill.loading { color: #f1c40f; border-color: rgba(241,196,15,0.3); }
@@ -373,27 +376,36 @@
     // ISP DATA - From FCC March 2026
     // ═══════════════════════════════════════════════════════════════════
     const ISP_DATA = [
-      {name:"AT&T",tech:"DSL/Fiber",speed:5000,url:"att.com/internet/availability",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-800-288-2020",lowIncome:{prog:"AT&T Access",price:"$10/mo",spd:"100 Mbps",elig:"SNAP, SSI, Medicaid, free lunch",matches:["snap","ssi","medicaid","lunch"]}},
-      {name:"Spectrum",tech:"Cable/Fiber",speed:1000,url:"spectrum.com/internet",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-833-267-6094",lowIncome:{prog:"Spectrum Internet Assist",price:"$17.99/mo",spd:"30 Mbps",elig:"SSI, free lunch, Medicaid",matches:["ssi","lunch","medicaid"]}},
-      {name:"Xfinity",tech:"Cable/Fiber",speed:10000,url:"xfinity.com/buy/internet",counties:["Jackson, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-800-934-6489",lowIncome:{prog:"Internet Essentials",price:"$9.95/mo",spd:"50 Mbps",elig:"SNAP, Medicaid, housing, SSI",matches:["snap","medicaid","housing","ssi"]}},
-      {name:"PCs for People",tech:"Mobile Hotspot",speed:100,url:"pcsforpeople.org/internet",counties:["Jackson, MO","Wyandotte, KS"],phone:"1-877-244-0767",lowIncome:{prog:"PCs for People Internet",price:"$15/mo",spd:"100 Mbps",elig:"200% poverty line, SNAP, Medicaid",matches:["snap","medicaid"]}},
-      {name:"T-Mobile",tech:"5G Home Internet",speed:245,url:"t-mobile.com/home-internet",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-844-275-9310",lowIncome:{prog:"Project 10Million",price:"Free",spd:"100GB/yr hotspot",elig:"Students in free/reduced lunch",matches:["lunch"]}},
-      {name:"Brightspeed",tech:"DSL/Fiber",speed:2000,url:"brightspeed.com/check-availability",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-833-692-7773",lowIncome:null},
-      {name:"Mediacom Xtream",tech:"Cable",speed:1000,url:"mediacomcable.com",counties:["Cass, MO","Clay, MO","Johnson, KS"],phone:"1-855-633-4226",lowIncome:null},
-      {name:"Everfast Fiber",tech:"Fiber",speed:1000,url:"everfastfiber.com",counties:["Jackson, MO","Johnson, KS","Wyandotte, KS"],phone:null,lowIncome:null},
-      {name:"Cox Communications",tech:"Fiber",speed:2000,url:"cox.com/residential/internet.html",counties:["Johnson, KS"],phone:"1-800-234-3993",lowIncome:null},
-      {name:"Midco",tech:"Cable/Fiber",speed:5000,url:"midco.com/internet",counties:["Wyandotte, KS","Leavenworth, KS"],phone:null,lowIncome:null},
-      {name:"Consolidated Communications",tech:"DSL",speed:500,url:"consolidated.com",counties:["Cass, MO","Clay, MO","Jackson, MO","Johnson, KS","Platte, MO"],phone:null,lowIncome:null},
-      {name:"KC Fiber",tech:"Fiber",speed:1000,url:"kcfiber.com",counties:["Jackson, MO"],phone:null,lowIncome:null},
-      {name:"KC Web",tech:"Fiber",speed:1000,url:"kcweb.net",counties:["Jackson, MO"],phone:null,lowIncome:null},
-      {name:"Fidium Fiber",tech:"Fiber",speed:2000,url:"fidium.com",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO"],phone:"1-844-343-4861",lowIncome:null},
-      {name:"United Fiber",tech:"Fiber",speed:1000,url:"unitedfiber.com",counties:["Jackson, MO","Cass, MO"],phone:null,lowIncome:null},
-      {name:"Conexon Connect",tech:"Fiber",speed:1000,url:"conexonconnect.com",counties:["Cass, MO"],phone:null,lowIncome:null},
-      {name:"ClearWave Fiber",tech:"Fiber",speed:7000,url:"clearwavefiber.com",counties:["Leavenworth, KS"],phone:"1-855-743-4237",lowIncome:null},
-      {name:"Mercury Fiber",tech:"Fixed Wireless",speed:150,url:"mercuryfiber.com",counties:["Leavenworth, KS"],phone:"1-888-962-2647",lowIncome:null},
-      {name:"Wisper ISP",tech:"Fixed Wireless",speed:50,url:"wisperisp.com",counties:["Ray, MO","Leavenworth, KS","Miami, KS"],phone:"1-800-765-7772",lowIncome:{"program":"Lifeline","discount":"$9.25/mo","link":"https://wisperisp.com"}},
-      {name:"Giant Communications",tech:"Fiber/Cable",speed:1000,url:"giantcomm.net",counties:["Leavenworth, KS"],phone:"785-362-9331",lowIncome:null},
-      {name:"Starlink",tech:"Satellite",speed:220,url:"starlink.com/order",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-855-786-2576",lowIncome:null},
+      // ── FIBER & CABLE ─────────────────────────────────────────────────────────
+      {name:"AT&T",tech:"DSL/Fiber",speed:5000,category:"fiber-cable",url:"att.com/access",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-800-288-2020",lowIncome:{prog:"AT&T Access",price:"$10/mo",spd:"100 Mbps",elig:"SNAP, SSI, Medicaid, free lunch",matches:["snap","ssi","medicaid","lunch"]}},
+      {name:"Spectrum",tech:"Cable/Fiber",speed:1000,category:"fiber-cable",url:"spectrum.com/assist",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-833-267-6094",lowIncome:{prog:"Spectrum Internet Assist",price:"$17.99/mo",spd:"30 Mbps",elig:"SSI, free lunch, Medicaid",matches:["ssi","lunch","medicaid"]}},
+      {name:"Xfinity",tech:"Cable/Fiber",speed:10000,category:"fiber-cable",url:"xfinity.com/buy/internet",counties:["Jackson, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-800-934-6489",lowIncome:{prog:"Internet Essentials",price:"$9.95/mo",spd:"50 Mbps",elig:"SNAP, Medicaid, housing, SSI",matches:["snap","medicaid","housing","ssi"]}},
+      {name:"Google Fiber",tech:"Fiber",speed:1000,category:"fiber-cable",url:"fiber.google.com",counties:[],phone:"(866) 777-7550",lowIncome:null},
+      {name:"Optimum",tech:"Fiber/Cable",speed:300,category:"fiber-cable",url:"optimum.com",counties:["Miami, KS"],phone:"(877) 694-9474",lowIncome:null},
+      {name:"Brightspeed",tech:"DSL/Fiber",speed:2000,category:"fiber-cable",url:"brightspeed.com/check-availability",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-833-692-7773",lowIncome:null},
+      {name:"Everfast Fiber",tech:"Fiber",speed:1000,category:"fiber-cable",url:"everfastfiber.com",counties:["Jackson, MO","Johnson, KS","Wyandotte, KS"],phone:"(913) 825-3000",lowIncome:null},
+      {name:"Mediacom Xtream",tech:"Cable",speed:1000,category:"fiber-cable",url:"mediacomcable.com",counties:["Cass, MO","Clay, MO","Johnson, KS"],phone:"1-855-633-4226",lowIncome:null},
+      {name:"Cox Communications",tech:"Fiber",speed:2000,category:"fiber-cable",url:"cox.com/residential/internet.html",counties:["Johnson, KS"],phone:"1-800-234-3993",lowIncome:null},
+      {name:"Midco",tech:"Cable/Fiber",speed:5000,category:"fiber-cable",url:"midco.com/internet",counties:["Wyandotte, KS","Leavenworth, KS"],phone:null,lowIncome:null},
+      {name:"Consolidated Communications",tech:"DSL",speed:500,category:"fiber-cable",url:"consolidated.com",counties:["Cass, MO","Clay, MO","Jackson, MO","Johnson, KS","Platte, MO"],phone:null,lowIncome:null},
+      {name:"KC Fiber",tech:"Fiber",speed:1000,category:"fiber-cable",url:"kcfiber.com",counties:["Jackson, MO"],phone:null,lowIncome:null},
+      {name:"KC Web",tech:"Fiber",speed:1000,category:"fiber-cable",url:"kcweb.net",counties:["Jackson, MO"],phone:null,lowIncome:null},
+      {name:"Fidium Fiber",tech:"Fiber",speed:2000,category:"fiber-cable",url:"fidium.com",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO"],phone:"1-844-343-4861",lowIncome:null},
+      {name:"United Fiber",tech:"Fiber",speed:1000,category:"fiber-cable",url:"unitedfiber.com",counties:["Jackson, MO","Cass, MO"],phone:null,lowIncome:null},
+      {name:"Conexon Connect",tech:"Fiber",speed:1000,category:"fiber-cable",url:"conexonconnect.com",counties:["Cass, MO"],phone:null,lowIncome:null},
+      {name:"ClearWave Fiber",tech:"Fiber",speed:7000,category:"fiber-cable",url:"clearwavefiber.com",counties:["Leavenworth, KS"],phone:"1-855-743-4237",lowIncome:null},
+      {name:"Giant Communications",tech:"Fiber/Cable",speed:1000,category:"fiber-cable",url:"giantcomm.net",counties:["Leavenworth, KS"],phone:"785-362-9331",lowIncome:null},
+      // ── WIRELESS / PHONE ──────────────────────────────────────────────────────
+      {name:"T-Mobile",tech:"5G Home Internet",speed:245,category:"wireless",url:"t-mobile.com/home-internet",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-844-275-9310",lowIncome:{prog:"Project 10Million",price:"Free",spd:"100GB/yr hotspot",elig:"Students in free/reduced lunch",matches:["lunch"]}},
+      {name:"Verizon Home Internet",tech:"5G Home Internet",speed:25,category:"wireless",url:"verizon.com/home/internet",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"(800) 837-4966",lowIncome:null},
+      {name:"Mint Mobile",tech:"Fixed Wireless",speed:400,category:"wireless",url:"mintmobile.com/minternet",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:null,lowIncome:null},
+      {name:"PCs for People",tech:"Mobile Hotspot",speed:100,category:"wireless",url:"pcsforpeople.org/internet",counties:["Jackson, MO","Wyandotte, KS"],phone:"(816) 259-0851",lowIncome:{prog:"PCs for People Internet",price:"$15/mo",spd:"50+ Mbps",elig:"200% poverty line, SNAP, Medicaid",matches:["snap","medicaid"]}},
+      // ── RURAL / SATELLITE ─────────────────────────────────────────────────────
+      {name:"Starlink",tech:"Satellite",speed:220,category:"rural-satellite",url:"starlink.com/order",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-855-786-2576",lowIncome:null},
+      {name:"KCCoyote",tech:"Fixed Wireless",speed:25,category:"rural-satellite",url:"kccoyote.com",counties:["Clay, MO","Platte, MO"],phone:"(816) 866-3038",lowIncome:null},
+      {name:"Mercury Broadband",tech:"Fixed Wireless",speed:150,category:"rural-satellite",url:"mercurybroadband.com",counties:["Leavenworth, KS"],phone:"(800) 354-4915",lowIncome:null},
+      {name:"Wisper ISP",tech:"Fixed Wireless",speed:50,category:"rural-satellite",url:"wisperisp.com",counties:["Ray, MO","Leavenworth, KS","Miami, KS"],phone:"1-800-765-7772",lowIncome:null},
+      {name:"KS Broadband",tech:"Fixed Wireless",speed:10,category:"rural-satellite",url:"ksbroadband.net",counties:["Miami, KS"],phone:"(785) 825-0199",lowIncome:null},
     ];
 
     // ═══════════════════════════════════════════════════════════════════
@@ -428,6 +440,18 @@
        counties:["Johnson, KS"],
        phone:"(913) 971-6850", url:"olatheks.org/library",
        elig:"Library card required"},
+      {name:"Paola Library", category:"hotspot", type:"Hotspot Loan", price:"FREE", speed:"10-25",
+       counties:["Miami, KS"],
+       phone:"(913) 259-3655", url:"cityofpaola.com",
+       elig:"7-day checkout; must be 18+ with library card in good standing"},
+      {name:"Louisburg Library", category:"hotspot", type:"Tech Services", price:"FREE", speed:"100+",
+       counties:["Miami, KS"],
+       phone:"(913) 837-2217", url:"louisburglibrary.org",
+       elig:"On-site high-speed Wi-Fi in building and parking lot"},
+      {name:"Osawatomie Library", category:"hotspot", type:"Library Hotspot", price:"FREE", speed:"10-25",
+       counties:["Miami, KS"],
+       phone:"(913) 755-2136", url:"osawatomieks.org",
+       elig:"Local. Check for device availability at the circulation desk"},
     ];
 
     // Maps ISP display name → scraper key used by /api/live-prices
@@ -638,11 +662,19 @@
       }
       document.getElementById('lowIncomeResults').innerHTML = lowHtml;
 
-      let allHtml = '<h4 class="section-title gray">ALL AVAILABLE PROVIDERS</h4>';
-      available.forEach(isp => {
-        const qualifies = isp.lowIncome && isp.lowIncome.matches.some(m => selectedProgs.includes(m));
+      const ISP_CATEGORIES = [
+        { key:'fiber-cable',    icon:'🔌', title:'FIBER & CABLE',
+          desc:'Wired internet — most reliable for home use. A technician installs a line into your wall. Very fast and stays strong even when many people in the house are online at the same time for work or school.' },
+        { key:'wireless',       icon:'📱', title:'WIRELESS / PHONE',
+          desc:'Works like a cell phone for your house. Plug a small box into a power outlet near a window — no drilling required. Very easy to set up yourself and a great option for renters who move often.' },
+        { key:'rural-satellite',icon:'🛰', title:'RURAL / SATELLITE',
+          desc:'For areas where wires and cell towers don\'t reach. Uses a dish on your roof. Often more expensive, but may be the only choice if you live far from the city.' },
+      ];
+
+      function renderIspCard(isp, selectedProgs) {
+        const qualifies = isp.lowIncome?.matches?.some(m => selectedProgs.includes(m));
         const liveKey = ISP_LIVE_KEYS[isp.name] || null;
-        allHtml += `<div class="isp-card"${liveKey ? ` data-isp-key="${liveKey}"` : ''}>
+        return `<div class="isp-card"${liveKey ? ` data-isp-key="${liveKey}"` : ''}>
           <div>
             <h4>${isp.name}</h4>
             <p class="meta">${isp.tech} • Up to ${isp.speed} Mbps${isp.phone ? ` • <a href="tel:${isp.phone}" style="color:inherit;text-decoration:none">${isp.phone}</a>` : ''}${isp.url ? ` • <a href="https://${isp.url}" target="_blank" style="color:#3498db;text-decoration:none">Visit website →</a>` : ''}</p>
@@ -650,7 +682,18 @@
           </div>
           ${qualifies ? `<span class="badge">Qualifies: ${isp.lowIncome.price}</span>` : ''}
         </div>`;
+      }
+
+      let allHtml = '<h4 class="section-title gray">ALL AVAILABLE PROVIDERS</h4>';
+      ISP_CATEGORIES.forEach(cat => {
+        const catIsps = available.filter(isp => isp.category === cat.key);
+        if (catIsps.length === 0) return;
+        allHtml += `<div class="isp-cat-header"><span class="isp-cat-title">${cat.icon} ${cat.title}</span><p class="isp-cat-desc">${cat.desc}</p></div>`;
+        catIsps.forEach(isp => { allHtml += renderIspCard(isp, selectedProgs); });
       });
+      // fallback: any ISP without a category
+      const uncategorized = available.filter(isp => !isp.category);
+      uncategorized.forEach(isp => { allHtml += renderIspCard(isp, selectedProgs); });
       document.getElementById('allResults').innerHTML = allHtml;
 
       // Show "Get Live Prices" if any result ISPs have live scrapers
@@ -670,7 +713,7 @@
           commHtml += `<div class="community-card">
             <div>
               <h4>${r.name}</h4>
-              <p class="meta">${r.type}${r.speed ? ' • ' + r.speed : ''} • ${r.phone} • ${r.url}</p>
+              <p class="meta">${r.type}${r.speed ? ' • ' + r.speed + ' Mbps' : ''}${r.phone && r.phone !== 'Check website' ? ` • <a href="tel:${r.phone}" style="color:inherit;text-decoration:none">${r.phone}</a>` : ''} • <a href="https://${r.url}" target="_blank" style="color:#3498db;text-decoration:none">${r.url}</a></p>
               <p class="elig-note">${r.elig}</p>
             </div>
             <span class="free-badge">${r.price}</span>
@@ -778,14 +821,30 @@ NOTE: Confirm availability with provider. ${levelNote} data from FCC BDC.
       });
     });
 
-    document.getElementById('checkFCC').addEventListener('click', () => {
-      if (window.geoData?.fccUrl) {
-        window.open(window.geoData.fccUrl, '_blank');
-      } else if (window.lookupData) {
-        window.open('https://broadbandmap.fcc.gov/', '_blank');
-      } else {
-        window.open('https://broadbandmap.fcc.gov/', '_blank');
+    document.getElementById('checkFCC').addEventListener('click', async () => {
+      const btn = document.getElementById('checkFCC');
+      const geo = window.geoData;
+      if (!geo) { window.open('https://broadbandmap.fcc.gov/', '_blank'); return; }
+
+      const origText = btn.textContent;
+      btn.textContent = '🔍 Looking up location…';
+      btn.disabled = true;
+
+      try {
+        const params = new URLSearchParams({ lat: geo.latitude, lon: geo.longitude });
+        if (geo.matchedAddress) params.set('address', geo.matchedAddress);
+        const resp = await fetch(`${PROXY_BASE}/api/fcc-location?${params}`);
+        const json = await resp.json();
+        const locId = json.success ? (json.location_id || '') : '';
+        const fccUrl = `https://broadbandmap.fcc.gov/location-summary/fixed?location_id=${locId}&addr=${encodeURIComponent(geo.matchedAddress || '')}&unit=&lat=${geo.latitude}&lon=${geo.longitude}&zoom=14`;
+        window.open(fccUrl, '_blank');
+      } catch (e) {
+        window.open(geo.fccUrl || 'https://broadbandmap.fcc.gov/', '_blank');
+      } finally {
+        btn.textContent = origText;
+        btn.disabled = false;
       }
+
     });
 
     // ═══════════════════════════════════════════════════════════════════
