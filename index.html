@@ -99,6 +99,15 @@
     .static-chip.li { background: rgba(255,193,7,0.12); border-color: rgba(255,193,7,0.3); color: #ffc107; }
     .static-src { font-size: 10px; font-weight: 600; color: #5c6370; margin-left: 2px; }
     .live-loading { font-size: 11px; color: #8892a0; font-style: italic; }
+    .updated-badge { display: inline-block; background: rgba(52,152,219,0.15); border: 1px solid rgba(52,152,219,0.3); color: #5dade2; padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 700; margin-left: 6px; vertical-align: middle; letter-spacing: 0.3px; }
+    .review-badge { display: inline-block; background: rgba(241,196,15,0.12); border: 1px solid rgba(241,196,15,0.3); color: #f1c40f; padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 700; margin-left: 4px; vertical-align: middle; }
+    .jackie-box { background: rgba(241,196,15,0.07); border: 1px solid rgba(241,196,15,0.25); border-radius: 10px; padding: 14px 16px; margin-top: 20px; }
+    .jackie-box summary { font-size: 12px; font-weight: 700; color: #f1c40f; cursor: pointer; list-style: none; }
+    .jackie-box summary::before { content: '▶ '; font-size: 9px; }
+    details[open] .jackie-box summary::before { content: '▼ '; }
+    .jackie-item { font-size: 12px; color: #a8b2bc; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); line-height: 1.5; }
+    .jackie-item:last-child { border-bottom: none; }
+    .jackie-item strong { color: #e8e8e8; }
     .isp-cat-header { margin: 18px 0 6px; }
     .isp-cat-title { font-size: 10px; font-weight: 700; color: #8892a0; letter-spacing: 0.8px; text-transform: uppercase; display: block; margin-bottom: 4px; }
     .isp-cat-desc { font-size: 11px; color: #5c6370; line-height: 1.45; padding: 6px 10px; margin: 0 0 6px; background: rgba(255,255,255,0.02); border-left: 2px solid rgba(255,255,255,0.07); border-radius: 0 6px 6px 0; }
@@ -242,6 +251,7 @@
       <div id="lowIncomeResults"></div>
       <div id="allResults"></div>
       <div id="communityResults"></div>
+      <div id="jackieFlags"></div>
       <div class="resources">
         <h4>📚 Additional Resources</h4>
         <div class="resources-grid">
@@ -577,11 +587,11 @@
     const ISP_DATA = [
       // ── FIBER & CABLE ─────────────────────────────────────────────────────────
       {name:"AT&T",tech:"DSL/Fiber",speed:5000,category:"fiber-cable",url:"att.com/access",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-800-288-2020",lowIncome:{prog:"AT&T Access",price:"$30/mo",spd:"100 Mbps",elig:"SNAP, SSI, Medicaid, free lunch",matches:["snap","ssi","medicaid","lunch"]}},
-      {name:"Spectrum",tech:"Cable/Fiber",speed:1000,category:"fiber-cable",url:"spectrum.com/assist",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-833-267-6094",lowIncome:{prog:"Spectrum Internet Assist",price:"$17.99/mo",spd:"30 Mbps",elig:"SSI, free lunch, Medicaid",matches:["ssi","lunch","medicaid"]}},
-      {name:"Xfinity",tech:"Cable/Fiber",speed:10000,category:"fiber-cable",url:"xfinity.com/learn/internet-service/internet-essentials",counties:["Jackson, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-800-934-6489",lowIncome:{prog:"Internet Essentials",price:"$14.95/mo",spd:"75 Mbps",elig:"SNAP, Medicaid, housing, SSI",matches:["snap","medicaid","housing","ssi"]},plans:[{name:"IE Plus",price:"$29.95/mo",spd:"100 Mbps"}]},
-      {name:"Google Fiber",tech:"Fiber",speed:8000,category:"fiber-cable",url:"fiber.google.com",counties:[],phone:"(866) 777-7550",lowIncome:null,plans:[{name:"1 Gig",price:"$70/mo"},{name:"3 Gig",price:"$100/mo"},{name:"8 Gig",price:"$150/mo"}]},
+      {name:"Spectrum",tech:"Cable/Fiber",speed:1000,category:"fiber-cable",url:"spectrum.com/assist",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-833-267-6094",lowIncome:{prog:"Spectrum Internet Assist",price:"$17.99/mo",spd:"30 Mbps",elig:"SSI, free lunch, Medicaid",matches:["ssi","lunch","medicaid"]},reviewNote:"Internet Assist price: tool shows $17.99/mo — some sources say $20/mo. Confirm current rate."},
+      {name:"Xfinity",tech:"Cable/Fiber",speed:10000,category:"fiber-cable",url:"xfinity.com/learn/internet-service/internet-essentials",counties:["Jackson, MO","Platte, MO","Cass, MO","Wyandotte, KS","Johnson, KS"],phone:"1-800-934-6489",lowIncome:{prog:"Internet Essentials",price:"$14.95/mo",spd:"75 Mbps",elig:"SNAP, Medicaid, housing, SSI",matches:["snap","medicaid","housing","ssi"]},plans:[{name:"IE Plus",price:"$29.95/mo",spd:"100 Mbps"}],updated:"Apr 2026",reviewNote:"Internet Essentials price increased from $9.95 → $14.95/mo (per xfinity.com). IE Plus added at $29.95/mo. Confirm Jackie has updated aLEGEND sheet."},
+      {name:"Google Fiber",tech:"Fiber",speed:8000,category:"fiber-cable",url:"fiber.google.com",counties:[],phone:"(866) 777-7550",lowIncome:null,plans:[{name:"1 Gig",price:"$70/mo"},{name:"3 Gig",price:"$100/mo"},{name:"8 Gig",price:"$150/mo"}],updated:"Apr 2026"},
       {name:"Optimum",tech:"Fiber/Cable",speed:300,category:"fiber-cable",url:"optimum.com",counties:["Miami, KS"],phone:"(877) 694-9474",lowIncome:null},
-      {name:"Brightspeed",tech:"DSL/Fiber",speed:8000,category:"fiber-cable",url:"brightspeed.com/check-availability",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-833-692-7773",lowIncome:null,plans:[{name:"Fiber from",price:"$30/mo"},{name:"8 Gig",price:"$90/mo"}]},
+      {name:"Brightspeed",tech:"DSL/Fiber",speed:8000,category:"fiber-cable",url:"brightspeed.com/check-availability",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-833-692-7773",lowIncome:null,plans:[{name:"Fiber from",price:"$30/mo"},{name:"8 Gig",price:"$90/mo"}],updated:"Apr 2026",reviewNote:"'Fiber from $30/mo' may be a promotional rate — confirm standard price and whether Brightspeed has a low-income program."},
       {name:"Everfast Fiber",tech:"Fiber",speed:1000,category:"fiber-cable",url:"everfastfiber.com",counties:["Jackson, MO","Johnson, KS","Wyandotte, KS"],phone:"(913) 825-3000",lowIncome:null,local:true},
       {name:"Mediacom Xtream",tech:"Cable",speed:1000,category:"fiber-cable",url:"mediacomcable.com",counties:["Cass, MO","Clay, MO","Johnson, KS"],phone:"1-855-633-4226",lowIncome:null},
       {name:"Cox Communications",tech:"Fiber",speed:2000,category:"fiber-cable",url:"cox.com/residential/internet.html",counties:["Johnson, KS"],phone:"1-800-234-3993",lowIncome:null},
@@ -596,14 +606,14 @@
       {name:"Giant Communications",tech:"Fiber/Cable",speed:1000,category:"fiber-cable",url:"giantcomm.net",counties:["Leavenworth, KS"],phone:"785-362-9331",lowIncome:null},
       // ── WIRELESS / PHONE ──────────────────────────────────────────────────────
       {name:"T-Mobile",tech:"5G Home Internet",speed:245,category:"wireless",url:"t-mobile.com/home-internet",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-844-275-9310",lowIncome:{prog:"Project 10Million",price:"Free",spd:"100GB/yr hotspot",elig:"Students in free/reduced lunch",matches:["lunch"]}},
-      {name:"Verizon Home Internet",tech:"5G Home Internet",speed:1000,category:"wireless",url:"verizon.com/discounts/verizon-forward",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"(800) 837-4966",lowIncome:{prog:"Verizon Forward",price:"$20/mo",spd:"5G Home speed",elig:"SNAP, Medicaid, SSI or other govt assistance",matches:["snap","medicaid","ssi"]},plans:[{name:"5G Home",price:"$35/mo*"},{name:"5G Home Plus",price:"$45/mo*"}]},
-      {name:"Mint Mobile",tech:"5G Fixed Wireless",speed:415,category:"wireless",url:"mintmobile.com/5g-home-internet",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:null,lowIncome:null,plans:[{name:"MINTernet standalone",price:"$40/mo"},{name:"MINTernet + wireless",price:"$30/mo"}]},
+      {name:"Verizon Home Internet",tech:"5G Home Internet",speed:1000,category:"wireless",url:"verizon.com/discounts/verizon-forward",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"(800) 837-4966",lowIncome:{prog:"Verizon Forward",price:"$20/mo",spd:"5G Home speed",elig:"SNAP, Medicaid, SSI or other govt assistance",matches:["snap","medicaid","ssi"]},plans:[{name:"5G Home",price:"$35/mo*"},{name:"5G Home Plus",price:"$45/mo*"}],updated:"Apr 2026",reviewNote:"Speed corrected (was 25 Mbps). Verizon Forward ($20/mo) added — verify exact eligibility criteria and whether Jackie has it on aLEGEND. Standard plans require Verizon phone line (*)."},
+      {name:"Mint Mobile",tech:"5G Fixed Wireless",speed:415,category:"wireless",url:"mintmobile.com/5g-home-internet",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:null,lowIncome:null,plans:[{name:"MINTernet standalone",price:"$40/mo"},{name:"MINTernet + wireless",price:"$30/mo"}],updated:"Apr 2026"},
       {name:"PCs for People",tech:"Mobile Hotspot",speed:100,category:"wireless",url:"pcsforpeople.org/internet",counties:["Jackson, MO","Wyandotte, KS"],phone:"(816) 259-0851",lowIncome:{prog:"PCs for People Internet",price:"$15/mo",spd:"50+ Mbps",elig:"200% poverty line, SNAP, Medicaid",matches:["snap","medicaid"]}},
       // ── RURAL / SATELLITE ─────────────────────────────────────────────────────
       {name:"Starlink",tech:"Satellite",speed:220,category:"rural-satellite",url:"starlink.com/order",counties:["Jackson, MO","Clay, MO","Platte, MO","Cass, MO","Ray, MO","Wyandotte, KS","Johnson, KS","Leavenworth, KS","Miami, KS"],phone:"1-855-786-2576",lowIncome:null},
       {name:"KCCoyote",tech:"Fixed Wireless",speed:25,category:"rural-satellite",url:"kccoyote.com",counties:["Clay, MO","Platte, MO"],phone:"(816) 866-3038",lowIncome:null},
       {name:"Mercury Broadband",tech:"Fixed Wireless",speed:150,category:"rural-satellite",url:"mercurybroadband.com",counties:["Leavenworth, KS"],phone:"(800) 354-4915",lowIncome:null},
-      {name:"Wisper ISP",tech:"Fixed Wireless",speed:400,category:"rural-satellite",url:"wisperisp.com",counties:["Ray, MO","Leavenworth, KS","Miami, KS"],phone:"1-800-765-7772",lowIncome:null,plans:[{name:"25 Mbps",price:"$40/mo"},{name:"50 Mbps",price:"$65/mo"},{name:"100 Mbps",price:"~$75/mo"}]},
+      {name:"Wisper ISP",tech:"Fixed Wireless",speed:400,category:"rural-satellite",url:"wisperisp.com",counties:["Ray, MO","Leavenworth, KS","Miami, KS"],phone:"1-800-765-7772",lowIncome:null,plans:[{name:"25 Mbps",price:"$40/mo"},{name:"50 Mbps",price:"$65/mo"},{name:"100 Mbps",price:"~$75/mo"}],updated:"Apr 2026",reviewNote:"Pricing pulled from wisperisp.com — confirm with Jackie whether these are current KC-area rates."},
       {name:"KS Broadband",tech:"Fixed Wireless",speed:10,category:"rural-satellite",url:"ksbroadband.net",counties:["Miami, KS"],phone:"(785) 825-0199",lowIncome:null},
     ];
 
@@ -855,7 +865,7 @@
         : '';
       return `<div class="isp-card"${liveKey ? ` data-isp-key="${liveKey}"` : ''}>
         <div>
-          <h4>${isp.name}${isp.local ? `<span class="local-badge">${t('local_badge')}</span>` : ''}</h4>
+          <h4>${isp.name}${isp.local ? `<span class="local-badge">${t('local_badge')}</span>` : ''}${isp.updated ? `<span class="updated-badge">🔄 ${isp.updated}</span>` : ''}${isp.reviewNote ? `<span class="review-badge">⚠️ verify</span>` : ''}</h4>
           <p class="meta">${isp.tech} • Up to ${isp.speed} Mbps${isp.phone ? ` • <a href="tel:${isp.phone}" style="color:inherit;text-decoration:none">${isp.phone}</a>` : ''}${isp.url ? ` • <a href="https://${isp.url}" target="_blank" style="color:#3498db;text-decoration:none">${t('visit_website')}</a>` : ''}</p>
           ${staticPlans}
           ${liveKey ? `<div class="live-plans"></div>` : ''}
@@ -940,6 +950,21 @@
         });
       }
       document.getElementById('communityResults').innerHTML = commHtml;
+
+      // Jackie review flags — collect any ISP in results with a reviewNote
+      const flagged = d.available.filter(isp => isp.reviewNote);
+      let jackieHtml = '';
+      if (flagged.length) {
+        jackieHtml = `<details style="margin-top:16px;">
+          <div class="jackie-box">
+            <summary>⚠️ ${flagged.length} item${flagged.length>1?'s':''} to verify with Jackie next time you meet</summary>
+            <div style="margin-top:10px;">
+              ${flagged.map(isp => `<div class="jackie-item"><strong>${isp.name}:</strong> ${isp.reviewNote}</div>`).join('')}
+            </div>
+          </div>
+        </details>`;
+      }
+      document.getElementById('jackieFlags').innerHTML = jackieHtml;
     }
 
     // ═══════════════════════════════════════════════════════════════════
