@@ -1053,7 +1053,7 @@
       <div class="header">
         <div>
           <h1>${t('print_title')}</h1>
-          <div class="address">${geo?.matchedAddress || d.fullAddress || ''}</div>
+          <div class="address">ZIP: ${d.fullAddress?.split(/\s+/).pop() || 'Unknown'}</div>
           <div class="date">${new Date().toLocaleDateString()} • ${d.county}</div>
         </div>
         <div class="qr-section">
