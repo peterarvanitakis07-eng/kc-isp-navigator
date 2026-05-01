@@ -6,6 +6,10 @@ on:
     - cron: '0 15 1 * *'
   workflow_dispatch:   # allow manual run from GitHub Actions tab
 
+permissions:
+  issues: write
+  contents: read
+
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
