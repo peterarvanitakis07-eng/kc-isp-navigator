@@ -621,16 +621,13 @@
       "AT&T": [
         { name: "Internet 10", speed: 10, price: 35 },
         { name: "Internet 25", speed: 25, price: 45 },
-        { name: "Internet 75", speed: 75, price: 60 },
-        { name: "Fiber 100", speed: 100, price: 80 },
-        { name: "Fiber 300", speed: 300, price: 110 },
-        { name: "Fiber 1000", speed: 1000, price: 140 }
+        { name: "Internet 75", speed: 75, price: 60 }
       ],
       "Google Fiber": [
         { name: "100 Mbps", speed: 100, price: 50 },
         { name: "1 Gigabit", speed: 1000, price: 70 }
       ],
-      "Everfastfiber": [
+      "Everfastfiber ⭐": [
         { name: "Fiber 50", speed: 50, price: 50 },
         { name: "Fiber 100", speed: 100, price: 75 },
         { name: "Fiber 500", speed: 500, price: 125 }
@@ -1044,11 +1041,12 @@
         if (!isps.length) return;
         body += `<div class="section"><h2>${cat.title}</h2>`;
         isps.forEach(isp => {
+          const urlLink = isp.url ? `<a href="https://${isp.url}" style="color:#0070c0;text-decoration:underline;">${isp.url}</a>` : '';
           body += `<div class="isp-row">
             <span class="isp-name">${isp.name}${isp.local ? ' ⭐' : ''}</span>
             <span class="isp-tech">${isp.tech}</span>
             <span class="isp-phone">${isp.phone || ''}</span>
-            <span class="isp-url">${isp.url || ''}</span>
+            <span class="isp-url">${urlLink}</span>
           </div>`;
           // Add nested plans if available
           const plans = PROVIDER_PLANS[isp.name];
