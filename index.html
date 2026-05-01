@@ -1070,11 +1070,12 @@
       if (d.communityAvailable?.length) {
         body += `<div class="section"><h2>${t('sec_community')}</h2>`;
         d.communityAvailable.forEach(r => {
+          const urlLink = r.url ? `<a href="https://${r.url}" style="color:#0070c0;text-decoration:underline;">${r.url}</a>` : '';
           body += `<div class="isp-row">
             <span class="isp-name">${r.name}</span>
             <span class="isp-tech">${r.type} — ${r.price}</span>
             <span class="isp-phone">${r.phone !== 'Check website' ? (r.phone||'') : ''}${r.hours ? ` (${r.hours})` : ''}</span>
-            <span class="isp-url">${r.url||''}</span>
+            <span class="isp-url">${urlLink}</span>
           </div>`;
         });
         body += '</div>';
