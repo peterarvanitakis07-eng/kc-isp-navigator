@@ -76,15 +76,35 @@ If you spot any red flags, double-check on the official website and note the cha
 
 ---
 
-## LINK CHECKING (NEW)
+## LINK CHECKING — CRITICAL STEP
 
-When visiting each provider, also verify the `url` field in ISP_DATA is correct:
+**⚠️ This step is essential—broken links harm client experience. Test every URL that changed.**
 
-- **Spectrum:** Should link to: `www.spectrum.com/resources/internet-wifi/about-spectrum-internet-assist`
-- **Verizon:** Should link to: `www.verizon.com/discounts/verizon-forward/`
-- **Others:** Check if links still work (don't get 404 errors)
+When visiting each provider website, **manually test** the `url` field for these key providers:
 
-If a URL returns 404, find the correct page and update the `url` field in ISP_DATA.
+**Spectrum (Low-Income Program):**
+- Current URL in code: `www.spectrum.com/resources/internet-wifi/about-spectrum-internet-assist`
+- ✅ **Test it:** Visit https://www.spectrum.com/resources/internet-wifi/about-spectrum-internet-assist
+- ❌ If 404: Search Spectrum.com for "Internet Assist" and find the correct page. Update ISP_DATA line 579.
+- 📝 Common: Spectrum reorganizes pages. Fall back to `spectrum.com` homepage if specific link breaks.
+
+**Verizon (Verizon Forward):**
+- Current URL in code: `www.verizon.com/discounts/verizon-forward/`
+- ✅ **Test it:** Visit https://www.verizon.com/discounts/verizon-forward/
+- ❌ If 404: Search Verizon.com for "Verizon Forward" or "Verizon Home Internet discount". Update ISP_DATA line 598.
+- 📝 Common: Verizon discounts pages change frequently. If broken, link to `verizon.com/home-internet` instead.
+
+**Other Critical Links (T-Mobile, Google Fiber, etc.):**
+- Verify each URL in ISP_DATA returns a working page (not 404)
+- If any link is broken, search the provider's main site for the correct landing page
+
+**If a URL is broken:**
+1. Find the correct page on the provider's website
+2. Copy the new URL into ISP_DATA
+3. Add a `reviewNote` explaining the change
+4. Test the link in the print output before committing
+
+**Why this matters:** The "Print for Client" output includes hyperlinks. A 404 breaks the client's trust and looks unprofessional.
 
 ---
 
