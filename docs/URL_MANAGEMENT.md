@@ -77,7 +77,7 @@ Example for Everfast:
 
 After updating ISP_DATA with new URLs:
 ```bash
-cd /Users/peterarvanitakis/Downloads/kc-isp-navigator
+cd the project folder
 git add index.html PRICING_AUDIT_CHECKLIST.md
 git commit -m "Update ISP URLs from monthly audit - May 2026"
 git push origin main

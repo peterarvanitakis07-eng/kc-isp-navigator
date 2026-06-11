@@ -2,7 +2,7 @@
 
 **Time:** ~2-3 minutes  
 **When:** 1st of each month (automated reminder at 9 AM)  
-**File to update:** `/Users/peterarvanitakis/Downloads/kc-isp-navigator/index.html` (ISP_DATA array, lines 587–618)
+**File to update:** `the project folder/index.html` (ISP_DATA array, lines 587–618)
 
 ---
 
@@ -51,7 +51,7 @@
 
 ## HOW TO UPDATE ISP_DATA
 
-1. **Open** `/Users/peterarvanitakis/Downloads/kc-isp-navigator/index.html`
+1. **Open** `the project folder/index.html`
 2. **Find** the ISP_DATA array (starts line 587)
 3. **Locate** the ISP entry (Spectrum, T-Mobile, etc.)
 4. **Update** the fields:

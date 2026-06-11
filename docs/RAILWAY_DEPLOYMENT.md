@@ -37,7 +37,7 @@
 ### Option 2: Trigger via GitHub Commit
 Push a new commit to `main` to trigger Railway's webhook:
 ```bash
-cd /Users/peterarvanitakis/Downloads/kc-isp-navigator
+cd the project folder
 git add index.html
 git commit -m "Force redeploy trigger"
 git push origin main
@@ -68,7 +68,7 @@ If changes still aren't showing after redeploy:
 
 Run this from the project directory:
 ```bash
-cd /Users/peterarvanitakis/Downloads/kc-isp-navigator
+cd the project folder
 git log --oneline -5
 ```
 
